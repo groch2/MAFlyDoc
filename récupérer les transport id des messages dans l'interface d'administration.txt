@@ -1,0 +1,2 @@
+//javascript à exécuter dans la console du navigateur pour récupérer les identifiants "transportId" des messages affichés dans l'interface d'administration: https://as1.ondemand.esker.com/ondemand/webaccess/asd/documents.aspx
+[...document.querySelectorAll("#tpl_ih_adminList_MainGrid > tbody tr:not(:first-child)")].map(row => ({ transportId : row.querySelector("td:first-child > input").value.replace(/^MOD\./, ''), etat: row.querySelector('td:nth-child(5)').innerText }))

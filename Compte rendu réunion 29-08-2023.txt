@@ -1,0 +1,11 @@
+le nom et le prénom de l'expéditeur ne doivent pas être obligatoires
+
+préciser le type d'envoi recommandé AVEC AR
+
+ajouter endpoint à la web api pour récupérer plusieurs envois d'après une liste d'identifiants
+
+transformer la liste de tous les états possibles  en une énumération de paire identifiant/libellé, et faire pareil pour les modes d'envoi
+
+changer l'état "retourné non remis au destinataire" en "pli non distribué"
+
+ajouter v1 à l'adresse de la web api pour la versionner

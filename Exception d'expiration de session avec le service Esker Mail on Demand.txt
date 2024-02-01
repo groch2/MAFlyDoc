@@ -1,0 +1,6 @@
+ex	{"No valid Session is associated with this ID '<identifiant_de_session>'"}	System.ServiceModel.FaultException
+Code	{System.ServiceModel.FaultCode}	System.ServiceModel.FaultCode
+	IsPredefinedFault	true		bool
+	IsReceiverFault		true		bool
+	IsSenderFault		false		bool
+	Name				"Server"	string

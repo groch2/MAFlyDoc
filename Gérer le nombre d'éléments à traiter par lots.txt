@@ -1,0 +1,1 @@
+pour la synchronisation de l'état des envois, la taille des lots d'envois récupérés en base de données doit être décorrélée de la taille des lots d'envois dont on récupère l'état en appelant le service Esker.

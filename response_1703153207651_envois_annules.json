@@ -1,0 +1,15 @@
+{
+  "envoiIdSuccessfullyCanceledList": [
+    184,
+    179,
+    187,
+    197,
+    198
+  ],
+  "cancelationErrors": [
+    {
+      "envoiId": 189,
+      "error": "Message is already in a terminal state."
+    }
+  ]
+}

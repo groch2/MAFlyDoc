@@ -1,0 +1,43 @@
+2023-04-24 16:12:07.551 +02:00 [ERR] Object reference not set to an instance of an object.
+ SourceContext: "MAFlyDoc.Controllers.EnvoisController"
+ ActionId: "495c62a2-0676-4d46-83f1-b57270fdab57"
+ ActionName: "MAFlyDoc.Controllers.EnvoisController.PostRetryEnvois (MAFlyDoc.WebApi)"
+ RequestId: "0HMQ4PM3LRMO0:00000004"
+ RequestPath: "/Envois/Retry"
+ ConnectionId: "0HMQ4PM3LRMO0"
+ Scope: []
+ MachineName: "MAFPC1168"
+ Application: "MAFlyDoc.WebApi"
+ Environment: "Development"
+ Exception: System.NullReferenceException: Object reference not set to an instance of an object.
+   at MAFlyDoc.Controllers.EnvoisController.<PostRetryEnvois>g__RetryEnvoi|21_0(Envoi envoi, EnvoiCourrierDbContext retryEnvoisDbContext) in C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi\Controllers\EnvoisController.cs:line 451
+2023-04-24 16:30:55.921 +02:00 [ERR] Value cannot be null. (Parameter 'source')
+ SourceContext: "MAFlyDoc.Controllers.EnvoisController"
+ ActionId: "a3d619d9-93e3-4134-96bf-98e7a802cd7f"
+ ActionName: "MAFlyDoc.Controllers.EnvoisController.PostRetryEnvois (MAFlyDoc.WebApi)"
+ RequestId: "0HMQ4Q0G3Q8BO:00000004"
+ RequestPath: "/Envois/Retry"
+ ConnectionId: "0HMQ4Q0G3Q8BO"
+ Scope: []
+ MachineName: "MAFPC1168"
+ Application: "MAFlyDoc.WebApi"
+ Environment: "Development"
+ Exception: System.ArgumentNullException: Value cannot be null. (Parameter 'source')
+   at System.Linq.ThrowHelper.ThrowArgumentNullException(ExceptionArgument argument)
+   at System.Linq.Enumerable.Select[TSource,TResult](IEnumerable`1 source, Func`2 selector)
+   at MAFlyDoc.Controllers.EnvoisController.<PostRetryEnvois>g__RetryEnvoi|21_0(Envoi envoi) in C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi\Controllers\EnvoisController.cs:line 451
+2023-04-24 16:32:50.471 +02:00 [ERR] Value cannot be null. (Parameter 'source')
+ SourceContext: "MAFlyDoc.Controllers.EnvoisController"
+ ActionId: "a3d619d9-93e3-4134-96bf-98e7a802cd7f"
+ ActionName: "MAFlyDoc.Controllers.EnvoisController.PostRetryEnvois (MAFlyDoc.WebApi)"
+ RequestId: "0HMQ4Q0G3Q8BO:00000005"
+ RequestPath: "/Envois/Retry"
+ ConnectionId: "0HMQ4Q0G3Q8BO"
+ Scope: []
+ MachineName: "MAFPC1168"
+ Application: "MAFlyDoc.WebApi"
+ Environment: "Development"
+ Exception: System.ArgumentNullException: Value cannot be null. (Parameter 'source')
+   at System.Linq.ThrowHelper.ThrowArgumentNullException(ExceptionArgument argument)
+   at System.Linq.Enumerable.Select[TSource,TResult](IEnumerable`1 source, Func`2 selector)
+   at MAFlyDoc.Controllers.EnvoisController.<PostRetryEnvois>g__RetryEnvoi|21_0(Envoi envoi) in C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi\Controllers\EnvoisController.cs:line 451

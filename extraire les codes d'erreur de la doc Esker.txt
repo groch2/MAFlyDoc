@@ -1,0 +1,5 @@
+//https://doc.esker.com/eskerondemand/cv_ly/en/webservices/Content/References/error_messages_en.html
+const table = document.querySelector('#mc-main-content table')
+const get_row_cells_content = ({cells}) => [...cells].map(c => c.innerText)
+const columns = [...table.querySelectorAll('thead > tr')].flatMap(get_row_cells_content)
+const rows = [...table.querySelectorAll('tbody > tr')].map(get_row_cells_content)

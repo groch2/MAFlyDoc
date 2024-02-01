@@ -1,0 +1,710 @@
+[
+  {
+    "EnvoiId": 1,
+    "Sender": {
+      "UserId": "Test",
+      "PersonFirstName": "Test",
+      "PersonLastName": "Test",
+      "CompanyName": "Test"
+    },
+    "Recipient": {
+      "CompteId": 0,
+      "PersonneId": 0,
+      "AdresseId": 0,
+      "PostageAddress": "Test"
+    },
+    "Subject": null,
+    "MailPostage": 0,
+    "TransportId": "1115256652259090862",
+    "SubmissionId": null,
+    "DocumentsArTelechargesGedId": null,
+    "EtatsEnvoiHistoryEntriesList": [
+      {
+        "Etat": 2,
+        "DateTime": "2023-11-08T11:49:34+01:00"
+      },
+      {
+        "Etat": 1,
+        "DateTime": "2022-01-01T00:00:00+02:00"
+      }
+    ],
+    "LastEtatEnvoiHistoryEntry": {
+      "Etat": 2,
+      "DateTime": "2023-11-08T11:49:34+01:00"
+    },
+    "EtatFinalErrorMessage": null
+  },
+  {
+    "EnvoiId": 2,
+    "Sender": {
+      "UserId": "Test",
+      "PersonFirstName": "Test",
+      "PersonLastName": "Test",
+      "CompanyName": "Test"
+    },
+    "Recipient": {
+      "CompteId": 0,
+      "PersonneId": 0,
+      "AdresseId": 0,
+      "PostageAddress": "Test"
+    },
+    "Subject": null,
+    "MailPostage": 0,
+    "TransportId": "1115450166305579881",
+    "SubmissionId": null,
+    "DocumentsArTelechargesGedId": null,
+    "EtatsEnvoiHistoryEntriesList": [
+      {
+        "Etat": 2,
+        "DateTime": "2023-11-08T11:49:34+01:00"
+      },
+      {
+        "Etat": 1,
+        "DateTime": "2022-01-01T00:00:00+02:00"
+      }
+    ],
+    "LastEtatEnvoiHistoryEntry": {
+      "Etat": 2,
+      "DateTime": "2023-11-08T11:49:34+01:00"
+    },
+    "EtatFinalErrorMessage": null
+  },
+  {
+    "EnvoiId": 3,
+    "Sender": {
+      "UserId": "Test",
+      "PersonFirstName": "Test",
+      "PersonLastName": "Test",
+      "CompanyName": "Test"
+    },
+    "Recipient": {
+      "CompteId": 0,
+      "PersonneId": 0,
+      "AdresseId": 0,
+      "PostageAddress": "Test"
+    },
+    "Subject": null,
+    "MailPostage": 0,
+    "TransportId": "1115397389744915723",
+    "SubmissionId": null,
+    "DocumentsArTelechargesGedId": null,
+    "EtatsEnvoiHistoryEntriesList": [
+      {
+        "Etat": 4,
+        "DateTime": "2023-11-24T10:38:40+01:00"
+      },
+      {
+        "Etat": 2,
+        "DateTime": "2023-11-08T11:15:52+01:00"
+      },
+      {
+        "Etat": 1,
+        "DateTime": "2022-01-01T00:00:00+02:00"
+      }
+    ],
+    "LastEtatEnvoiHistoryEntry": {
+      "Etat": 4,
+      "DateTime": "2023-11-24T10:38:40+01:00"
+    },
+    "EtatFinalErrorMessage": null
+  },
+  {
+    "EnvoiId": 4,
+    "Sender": {
+      "UserId": "Test",
+      "PersonFirstName": "Test",
+      "PersonLastName": "Test",
+      "CompanyName": "Test"
+    },
+    "Recipient": {
+      "CompteId": 0,
+      "PersonneId": 0,
+      "AdresseId": 0,
+      "PostageAddress": "Test"
+    },
+    "Subject": null,
+    "MailPostage": 0,
+    "TransportId": "953584462933209966",
+    "SubmissionId": null,
+    "DocumentsArTelechargesGedId": null,
+    "EtatsEnvoiHistoryEntriesList": [
+      {
+        "Etat": 2,
+        "DateTime": "2022-04-11T15:46:34+02:00"
+      },
+      {
+        "Etat": 1,
+        "DateTime": "2022-01-01T00:00:00+02:00"
+      }
+    ],
+    "LastEtatEnvoiHistoryEntry": {
+      "Etat": 2,
+      "DateTime": "2022-04-11T15:46:34+02:00"
+    },
+    "EtatFinalErrorMessage": null
+  },
+  {
+    "EnvoiId": 5,
+    "Sender": {
+      "UserId": "Test",
+      "PersonFirstName": "Test",
+      "PersonLastName": "Test",
+      "CompanyName": "Test"
+    },
+    "Recipient": {
+      "CompteId": 0,
+      "PersonneId": 0,
+      "AdresseId": 0,
+      "PostageAddress": "Test"
+    },
+    "Subject": null,
+    "MailPostage": 0,
+    "TransportId": "954622401926341001",
+    "SubmissionId": null,
+    "DocumentsArTelechargesGedId": null,
+    "EtatsEnvoiHistoryEntriesList": [
+      {
+        "Etat": 4,
+        "DateTime": "2022-05-25T20:03:45+02:00"
+      },
+      {
+        "Etat": 2,
+        "DateTime": "2022-04-15T15:07:28+02:00"
+      },
+      {
+        "Etat": 1,
+        "DateTime": "2022-01-01T00:00:00+02:00"
+      }
+    ],
+    "LastEtatEnvoiHistoryEntry": {
+      "Etat": 4,
+      "DateTime": "2022-05-25T20:03:45+02:00"
+    },
+    "EtatFinalErrorMessage": null
+  },
+  {
+    "EnvoiId": 6,
+    "Sender": {
+      "UserId": "Test",
+      "PersonFirstName": "Test",
+      "PersonLastName": "Test",
+      "CompanyName": "Test"
+    },
+    "Recipient": {
+      "CompteId": 0,
+      "PersonneId": 0,
+      "AdresseId": 0,
+      "PostageAddress": "Test"
+    },
+    "Subject": null,
+    "MailPostage": 0,
+    "TransportId": "1105492988897974578",
+    "SubmissionId": null,
+    "DocumentsArTelechargesGedId": null,
+    "EtatsEnvoiHistoryEntriesList": [
+      {
+        "Etat": 5,
+        "DateTime": "2023-10-06T17:50:29+02:00"
+      },
+      {
+        "Etat": 1,
+        "DateTime": "2022-01-01T00:00:00+02:00"
+      }
+    ],
+    "LastEtatEnvoiHistoryEntry": {
+      "Etat": 5,
+      "DateTime": "2023-10-06T17:50:29+02:00"
+    },
+    "EtatFinalErrorMessage": null
+  },
+  {
+    "EnvoiId": 7,
+    "Sender": {
+      "UserId": "Test",
+      "PersonFirstName": "Test",
+      "PersonLastName": "Test",
+      "CompanyName": "Test"
+    },
+    "Recipient": {
+      "CompteId": 0,
+      "PersonneId": 0,
+      "AdresseId": 0,
+      "PostageAddress": "Test"
+    },
+    "Subject": null,
+    "MailPostage": 0,
+    "TransportId": "1105616134200285689",
+    "SubmissionId": null,
+    "DocumentsArTelechargesGedId": null,
+    "EtatsEnvoiHistoryEntriesList": [
+      {
+        "Etat": 5,
+        "DateTime": "2023-10-06T17:52:08+02:00"
+      },
+      {
+        "Etat": 1,
+        "DateTime": "2022-01-01T00:00:00+02:00"
+      }
+    ],
+    "LastEtatEnvoiHistoryEntry": {
+      "Etat": 5,
+      "DateTime": "2023-10-06T17:52:08+02:00"
+    },
+    "EtatFinalErrorMessage": null
+  },
+  {
+    "EnvoiId": 8,
+    "Sender": {
+      "UserId": "Test",
+      "PersonFirstName": "Test",
+      "PersonLastName": "Test",
+      "CompanyName": "Test"
+    },
+    "Recipient": {
+      "CompteId": 0,
+      "PersonneId": 0,
+      "AdresseId": 0,
+      "PostageAddress": "Test"
+    },
+    "Subject": null,
+    "MailPostage": 0,
+    "TransportId": "1105598542014241376",
+    "SubmissionId": null,
+    "DocumentsArTelechargesGedId": null,
+    "EtatsEnvoiHistoryEntriesList": [
+      {
+        "Etat": 5,
+        "DateTime": "2023-10-06T17:53:23+02:00"
+      },
+      {
+        "Etat": 1,
+        "DateTime": "2022-01-01T00:00:00+02:00"
+      }
+    ],
+    "LastEtatEnvoiHistoryEntry": {
+      "Etat": 5,
+      "DateTime": "2023-10-06T17:53:23+02:00"
+    },
+    "EtatFinalErrorMessage": null
+  },
+  {
+    "EnvoiId": 9,
+    "Sender": {
+      "UserId": "Test",
+      "PersonFirstName": "Test",
+      "PersonLastName": "Test",
+      "CompanyName": "Test"
+    },
+    "Recipient": {
+      "CompteId": 0,
+      "PersonneId": 0,
+      "AdresseId": 0,
+      "PostageAddress": "Test"
+    },
+    "Subject": null,
+    "MailPostage": 0,
+    "TransportId": "1105457804525927576",
+    "SubmissionId": null,
+    "DocumentsArTelechargesGedId": null,
+    "EtatsEnvoiHistoryEntriesList": [
+      {
+        "Etat": 5,
+        "DateTime": "2023-10-06T18:36:30+02:00"
+      },
+      {
+        "Etat": 1,
+        "DateTime": "2022-01-01T00:00:00+02:00"
+      }
+    ],
+    "LastEtatEnvoiHistoryEntry": {
+      "Etat": 5,
+      "DateTime": "2023-10-06T18:36:30+02:00"
+    },
+    "EtatFinalErrorMessage": null
+  },
+  {
+    "EnvoiId": 10,
+    "Sender": {
+      "UserId": "Test",
+      "PersonFirstName": "Test",
+      "PersonLastName": "Test",
+      "CompanyName": "Test"
+    },
+    "Recipient": {
+      "CompteId": 0,
+      "PersonneId": 0,
+      "AdresseId": 0,
+      "PostageAddress": "Test"
+    },
+    "Subject": null,
+    "MailPostage": 0,
+    "TransportId": "1105440212339959308",
+    "SubmissionId": null,
+    "DocumentsArTelechargesGedId": null,
+    "EtatsEnvoiHistoryEntriesList": [
+      {
+        "Etat": 5,
+        "DateTime": "2023-10-06T19:00:20+02:00"
+      },
+      {
+        "Etat": 1,
+        "DateTime": "2022-01-01T00:00:00+02:00"
+      }
+    ],
+    "LastEtatEnvoiHistoryEntry": {
+      "Etat": 5,
+      "DateTime": "2023-10-06T19:00:20+02:00"
+    },
+    "EtatFinalErrorMessage": null
+  },
+  {
+    "EnvoiId": 11,
+    "Sender": {
+      "UserId": "Test",
+      "PersonFirstName": "Test",
+      "PersonLastName": "Test",
+      "CompanyName": "Test"
+    },
+    "Recipient": {
+      "CompteId": 0,
+      "PersonneId": 0,
+      "AdresseId": 0,
+      "PostageAddress": "Test"
+    },
+    "Subject": null,
+    "MailPostage": 0,
+    "TransportId": "1105598542014359112",
+    "SubmissionId": null,
+    "DocumentsArTelechargesGedId": null,
+    "EtatsEnvoiHistoryEntriesList": [
+      {
+        "Etat": 5,
+        "DateTime": "2023-10-06T19:02:32+02:00"
+      },
+      {
+        "Etat": 1,
+        "DateTime": "2022-01-01T00:00:00+02:00"
+      }
+    ],
+    "LastEtatEnvoiHistoryEntry": {
+      "Etat": 5,
+      "DateTime": "2023-10-06T19:02:32+02:00"
+    },
+    "EtatFinalErrorMessage": null
+  },
+  {
+    "EnvoiId": 12,
+    "Sender": {
+      "UserId": "Test",
+      "PersonFirstName": "Test",
+      "PersonLastName": "Test",
+      "CompanyName": "Test"
+    },
+    "Recipient": {
+      "CompteId": 0,
+      "PersonneId": 0,
+      "AdresseId": 0,
+      "PostageAddress": "Test"
+    },
+    "Subject": null,
+    "MailPostage": 0,
+    "TransportId": "1105545765456225901",
+    "SubmissionId": null,
+    "DocumentsArTelechargesGedId": null,
+    "EtatsEnvoiHistoryEntriesList": [
+      {
+        "Etat": 5,
+        "DateTime": "2023-10-06T19:02:32+02:00"
+      },
+      {
+        "Etat": 1,
+        "DateTime": "2022-01-01T00:00:00+02:00"
+      }
+    ],
+    "LastEtatEnvoiHistoryEntry": {
+      "Etat": 5,
+      "DateTime": "2023-10-06T19:02:32+02:00"
+    },
+    "EtatFinalErrorMessage": null
+  },
+  {
+    "EnvoiId": 13,
+    "Sender": {
+      "UserId": "Test",
+      "PersonFirstName": "Test",
+      "PersonLastName": "Test",
+      "CompanyName": "Test"
+    },
+    "Recipient": {
+      "CompteId": 0,
+      "PersonneId": 0,
+      "AdresseId": 0,
+      "PostageAddress": "Test"
+    },
+    "Subject": null,
+    "MailPostage": 0,
+    "TransportId": "1105492988898093015",
+    "SubmissionId": null,
+    "DocumentsArTelechargesGedId": null,
+    "EtatsEnvoiHistoryEntriesList": [
+      {
+        "Etat": 5,
+        "DateTime": "2023-10-06T19:06:57+02:00"
+      },
+      {
+        "Etat": 1,
+        "DateTime": "2022-01-01T00:00:00+02:00"
+      }
+    ],
+    "LastEtatEnvoiHistoryEntry": {
+      "Etat": 5,
+      "DateTime": "2023-10-06T19:06:57+02:00"
+    },
+    "EtatFinalErrorMessage": null
+  },
+  {
+    "EnvoiId": 14,
+    "Sender": {
+      "UserId": "Test",
+      "PersonFirstName": "Test",
+      "PersonLastName": "Test",
+      "CompanyName": "Test"
+    },
+    "Recipient": {
+      "CompteId": 0,
+      "PersonneId": 0,
+      "AdresseId": 0,
+      "PostageAddress": "Test"
+    },
+    "Subject": null,
+    "MailPostage": 0,
+    "TransportId": "1105475396712049105",
+    "SubmissionId": null,
+    "DocumentsArTelechargesGedId": null,
+    "EtatsEnvoiHistoryEntriesList": [
+      {
+        "Etat": 5,
+        "DateTime": "2023-10-06T19:12:19+02:00"
+      },
+      {
+        "Etat": 1,
+        "DateTime": "2022-01-01T00:00:00+02:00"
+      }
+    ],
+    "LastEtatEnvoiHistoryEntry": {
+      "Etat": 5,
+      "DateTime": "2023-10-06T19:12:19+02:00"
+    },
+    "EtatFinalErrorMessage": null
+  },
+  {
+    "EnvoiId": 15,
+    "Sender": {
+      "UserId": "Test",
+      "PersonFirstName": "Test",
+      "PersonLastName": "Test",
+      "CompanyName": "Test"
+    },
+    "Recipient": {
+      "CompteId": 0,
+      "PersonneId": 0,
+      "AdresseId": 0,
+      "PostageAddress": "Test"
+    },
+    "Subject": null,
+    "MailPostage": 0,
+    "TransportId": "1105580949828315660",
+    "SubmissionId": null,
+    "DocumentsArTelechargesGedId": null,
+    "EtatsEnvoiHistoryEntriesList": [
+      {
+        "Etat": 5,
+        "DateTime": "2023-10-06T19:12:55+02:00"
+      },
+      {
+        "Etat": 1,
+        "DateTime": "2022-01-01T00:00:00+02:00"
+      }
+    ],
+    "LastEtatEnvoiHistoryEntry": {
+      "Etat": 5,
+      "DateTime": "2023-10-06T19:12:55+02:00"
+    },
+    "EtatFinalErrorMessage": null
+  },
+  {
+    "EnvoiId": 16,
+    "Sender": {
+      "UserId": "Test",
+      "PersonFirstName": "Test",
+      "PersonLastName": "Test",
+      "CompanyName": "Test"
+    },
+    "Recipient": {
+      "CompteId": 0,
+      "PersonneId": 0,
+      "AdresseId": 0,
+      "PostageAddress": "Test"
+    },
+    "Subject": null,
+    "MailPostage": 0,
+    "TransportId": "1105528173270182552",
+    "SubmissionId": null,
+    "DocumentsArTelechargesGedId": null,
+    "EtatsEnvoiHistoryEntriesList": [
+      {
+        "Etat": 5,
+        "DateTime": "2023-10-06T19:15:52+02:00"
+      },
+      {
+        "Etat": 1,
+        "DateTime": "2022-01-01T00:00:00+02:00"
+      }
+    ],
+    "LastEtatEnvoiHistoryEntry": {
+      "Etat": 5,
+      "DateTime": "2023-10-06T19:15:52+02:00"
+    },
+    "EtatFinalErrorMessage": null
+  },
+  {
+    "EnvoiId": 17,
+    "Sender": {
+      "UserId": "Test",
+      "PersonFirstName": "Test",
+      "PersonLastName": "Test",
+      "CompanyName": "Test"
+    },
+    "Recipient": {
+      "CompteId": 0,
+      "PersonneId": 0,
+      "AdresseId": 0,
+      "PostageAddress": "Test"
+    },
+    "Subject": null,
+    "MailPostage": 0,
+    "TransportId": "1105475396712049570",
+    "SubmissionId": null,
+    "DocumentsArTelechargesGedId": null,
+    "EtatsEnvoiHistoryEntriesList": [
+      {
+        "Etat": 5,
+        "DateTime": "2023-10-06T19:19:25+02:00"
+      },
+      {
+        "Etat": 1,
+        "DateTime": "2022-01-01T00:00:00+02:00"
+      }
+    ],
+    "LastEtatEnvoiHistoryEntry": {
+      "Etat": 5,
+      "DateTime": "2023-10-06T19:19:25+02:00"
+    },
+    "EtatFinalErrorMessage": null
+  },
+  {
+    "EnvoiId": 18,
+    "Sender": {
+      "UserId": "Test",
+      "PersonFirstName": "Test",
+      "PersonLastName": "Test",
+      "CompanyName": "Test"
+    },
+    "Recipient": {
+      "CompteId": 0,
+      "PersonneId": 0,
+      "AdresseId": 0,
+      "PostageAddress": "Test"
+    },
+    "Subject": null,
+    "MailPostage": 0,
+    "TransportId": "1105422620153916323",
+    "SubmissionId": null,
+    "DocumentsArTelechargesGedId": null,
+    "EtatsEnvoiHistoryEntriesList": [
+      {
+        "Etat": 5,
+        "DateTime": "2023-10-06T19:19:25+02:00"
+      },
+      {
+        "Etat": 1,
+        "DateTime": "2022-01-01T00:00:00+02:00"
+      }
+    ],
+    "LastEtatEnvoiHistoryEntry": {
+      "Etat": 5,
+      "DateTime": "2023-10-06T19:19:25+02:00"
+    },
+    "EtatFinalErrorMessage": null
+  },
+  {
+    "EnvoiId": 19,
+    "Sender": {
+      "UserId": "Test",
+      "PersonFirstName": "Test",
+      "PersonLastName": "Test",
+      "CompanyName": "Test"
+    },
+    "Recipient": {
+      "CompteId": 0,
+      "PersonneId": 0,
+      "AdresseId": 0,
+      "PostageAddress": "Test"
+    },
+    "Subject": null,
+    "MailPostage": 0,
+    "TransportId": "1105580949828316068",
+    "SubmissionId": null,
+    "DocumentsArTelechargesGedId": null,
+    "EtatsEnvoiHistoryEntriesList": [
+      {
+        "Etat": 5,
+        "DateTime": "2023-10-06T19:19:25+02:00"
+      },
+      {
+        "Etat": 1,
+        "DateTime": "2022-01-01T00:00:00+02:00"
+      }
+    ],
+    "LastEtatEnvoiHistoryEntry": {
+      "Etat": 5,
+      "DateTime": "2023-10-06T19:19:25+02:00"
+    },
+    "EtatFinalErrorMessage": null
+  },
+  {
+    "EnvoiId": 20,
+    "Sender": {
+      "UserId": "Test",
+      "PersonFirstName": "Test",
+      "PersonLastName": "Test",
+      "CompanyName": "Test"
+    },
+    "Recipient": {
+      "CompteId": 0,
+      "PersonneId": 0,
+      "AdresseId": 0,
+      "PostageAddress": "Test"
+    },
+    "Subject": null,
+    "MailPostage": 0,
+    "TransportId": "1105598542014360502",
+    "SubmissionId": null,
+    "DocumentsArTelechargesGedId": null,
+    "EtatsEnvoiHistoryEntriesList": [
+      {
+        "Etat": 5,
+        "DateTime": "2023-10-06T19:19:30+02:00"
+      },
+      {
+        "Etat": 1,
+        "DateTime": "2022-01-01T00:00:00+02:00"
+      }
+    ],
+    "LastEtatEnvoiHistoryEntry": {
+      "Etat": 5,
+      "DateTime": "2023-10-06T19:19:30+02:00"
+    },
+    "EtatFinalErrorMessage": null
+  }
+]

@@ -1,0 +1,5 @@
+commit 25ffffd4ae8382c1e84cb651fb0c7f148e936797 (origin/feature/#72637_la_web_api_restitue_les_etapes_passee_d_un_envoi_dans_un_tableau)
+Author: Roch DESCHASEAUX <roch.deschaseaux@mafassurances.onmicrosoft.com>
+Date:   Mon Sep 11 16:31:38 2023 +0200
+
+    Ajustement du test de synchronisation de la relance à la nouvelle structure de l'historique des envois.

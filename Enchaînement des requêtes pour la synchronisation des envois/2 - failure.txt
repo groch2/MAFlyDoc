@@ -1,0 +1,14 @@
+POST https://maflydoc/envois/synchronisations
+	∟ HTTP/1.1 202 Accepted
+		Operation-Location: https://maflydoc/envois/synchronisations/456
+		Retry-After: 30
+
+GET https://maflydoc/envois/synchronisations/456
+Accept: application/json
+	∟ HTTP/1.1 200 OK
+		Content-Type: application/json
+		{
+			"createdDateTime": "2023-03-29T09:23:59.436Z",
+			"lastActionDateTime": "2023-03-29T09:38:59.436Z",
+			"status": "failure"
+		}

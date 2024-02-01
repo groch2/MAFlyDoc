@@ -1,0 +1,6 @@
+Commit 548ebc344f8450f62fcacaeefc6cc30131714316
+Author: Roch DESCHASEAUX <roch.deschaseaux@mafassurances.onmicrosoft.com>
+Date: lundi 28 août 2023 15:24
+Parent: 06b3d8c5
+
+fixup! renommage et documentation de la méthode qui détermine si une exception est dûe à l'expiration de la session avec le service Esker Mail on Demand

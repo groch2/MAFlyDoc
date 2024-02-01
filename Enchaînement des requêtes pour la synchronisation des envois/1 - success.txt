@@ -1,0 +1,24 @@
+POST https://maflydoc/envois/synchronisations
+	∟ HTTP/1.1 202 Accepted
+		Operation-Location: https://maflydoc/envois/synchronisations/123
+		Retry-After: 30
+
+GET https://maflydoc/envois/synchronisations/123
+Accept: application/json
+	∟ HTTP/1.1 200 OK
+		Content-Type: application/json
+		Retry-After: 30
+		{
+			"createdDateTime": "2023-03-29T08:36:32.537Z",
+			"status": "running"
+		}
+
+GET https://maflydoc/envois/synchronisations/123
+Accept: application/json
+	∟ HTTP/1.1 200 OK
+		Content-Type: application/json
+		{
+			"createdDateTime": "2023-03-29T08:36:32.537Z",
+			"lastActionDateTime": "2023-03-29T09:06:32.537Z",
+			"status": "succeeded"
+		}
