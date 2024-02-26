@@ -13,29 +13,52 @@
 var settings = JsonDocument.Parse(File.ReadAllText(@"C:\Users\deschaseauxr\Documents\MAFlyDoc\Get all envois\settings.json")).RootElement;
 var sqlServer = settings.GetProperty("sqlServer").GetString();
 var webApiAddress = settings.GetProperty("webApiAddress").GetString();
-
-using var connection = new SqlConnection($"Server={sqlServer};Database=MAFlyDoc;Integrated Security=True");
-connection.Open();
-using var command = connection.CreateCommand();
-command.CommandText = "SELECT [EnvoiId] FROM [dbo].[Envoi]";
-var dataTable = new DataTable();
-var dataAdapter = new SqlDataAdapter(command);
-dataAdapter.Fill(dataTable);
-var envoisId = dataTable.AsEnumerable().Select(r => (int)r[0]);
-var commaSeparatedEnvoisIdList = string.Join(',', envoisId);
-
-var httpClient =
-	new HttpClient {
-		BaseAddress = new Uri(webApiAddress)
-	};
-var getAllEnvoisResponse =
-	await httpClient.GetAsync(
-		$"/v1/Envois/Envois-from-envois-id-list?comma-separated-envois-id-list={commaSeparatedEnvoisIdList}");
-getAllEnvoisResponse.EnsureSuccessStatusCode();
-
+var httpClient = new HttpClient { BaseAddress = new Uri(webApiAddress) };
 var jsonSerializerOptions = 
-	new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-var content = await getAllEnvoisResponse.Content.ReadAsStringAsync();
-JsonSerializer.Deserialize<EnvoiQueryResult[]>(content, jsonSerializerOptions)
-	.Dump();
+	new JsonSerializerOptions {
+		PropertyNameCaseInsensitive = true,
+		Converters = { new JsonStringEnumConverter() }
+	};
+
+var envoisId = GetAllEnvoisIdFromDatabase();
+new { nbEnvoiTotal = envoisId.Count() }.Dump();
+
+var envois =
+	await Task.WhenAll(
+		GetItemsByPages(envoisId, pageSize: 80)
+			.Select(GetEnvoisByEnvoisIdList));
+envois.Dump();
+
+async Task<EnvoiQueryResult[]> GetEnvoisByEnvoisIdList(IEnumerable<int> envoisIdList) {
+	var commaSeparatedEnvoisIdList = string.Join(',', envoisIdList);
+	var getAllEnvoisResponse =
+		await httpClient.GetAsync(
+			$"/v1/Envois/Envois-from-envois-id-list?comma-separated-envois-id-list={commaSeparatedEnvoisIdList}");
+	getAllEnvoisResponse.EnsureSuccessStatusCode();
+	var content = await getAllEnvoisResponse.Content.ReadAsStringAsync();
+	return JsonSerializer.Deserialize<EnvoiQueryResult[]>(content, jsonSerializerOptions);
+}
+
+IEnumerable<IEnumerable<T>> GetItemsByPages<T>(IEnumerable<T> itemsSource, int pageSize) {
+	var nbItemsTotal = itemsSource.Count();
+	var skip = 0;
+	while (skip + pageSize <= nbItemsTotal) {
+		yield return itemsSource.Skip(skip).Take(pageSize);
+		skip += pageSize;
+	}
+	if (skip < nbItemsTotal) {
+		yield return itemsSource.Skip(skip).Take(pageSize);
+	}
+}
+
+IEnumerable<int> GetAllEnvoisIdFromDatabase() {
+	using var connection =
+		new SqlConnection($"Server={sqlServer};Database=MAFlyDoc;Integrated Security=True");
+	connection.Open();
+	using var command = connection.CreateCommand();
+	command.CommandText = "SELECT [EnvoiId] FROM [dbo].[Envoi]";
+	var dataTable = new DataTable();
+	var dataAdapter = new SqlDataAdapter(command);
+	dataAdapter.Fill(dataTable);
+	return dataTable.AsEnumerable().Select(r => (int)r[0]);
+}
