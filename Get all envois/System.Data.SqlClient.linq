@@ -22,28 +22,20 @@ var dataTable = new DataTable();
 var dataAdapter = new SqlDataAdapter(command);
 dataAdapter.Fill(dataTable);
 var envoisId = dataTable.AsEnumerable().Select(r => (int)r[0]);
+var commaSeparatedEnvoisIdList = string.Join(',', envoisId);
 
 var httpClient =
 	new HttpClient {
 		BaseAddress = new Uri(webApiAddress)
 	};
-var getAllEnvois = envoisId.Select(async envoiId => {
-	var response = await httpClient.GetAsync($"v1/envois/{envoiId}");
-	response.EnsureSuccessStatusCode();
-	return await response.Content.ReadAsStringAsync();
-});
-await Task.WhenAll(getAllEnvois);
-var jsonSerializerOptions = new JsonSerializerOptions {
-	PropertyNameCaseInsensitive = true
-};
+var getAllEnvoisResponse =
+	await httpClient.GetAsync(
+		$"/v1/Envois/Envois-from-envois-id-list?comma-separated-envois-id-list={commaSeparatedEnvoisIdList}");
+getAllEnvoisResponse.EnsureSuccessStatusCode();
+
+var jsonSerializerOptions = 
+	new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-getAllEnvois.Where(response => response != null)
-	.Select(response =>
-		JsonSerializer.Deserialize<EnvoiQueryResult>(response.Result, jsonSerializerOptions))
-	.Select((envoi, index) => new {
-		index = index + 1,
-		envoi.EnvoiId,
-		envoi.LastEtatEnvoiHistoryEntry,
-		envoi.TransportId
-	})
+var content = await getAllEnvoisResponse.Content.ReadAsStringAsync();
+JsonSerializer.Deserialize<EnvoiQueryResult[]>(content, jsonSerializerOptions)
 	.Dump();
