@@ -23,11 +23,18 @@ var jsonSerializerOptions =
 var envoisId = GetAllEnvoisIdFromDatabase();
 new { nbEnvoiTotal = envoisId.Count() }.Dump();
 
-var envois =
-	await Task.WhenAll(
-		GetItemsByPages(envoisId, pageSize: 80)
-			.Select(GetEnvoisByEnvoisIdList));
-envois.Dump();
+var envois = GetEnvois(envoisId);
+(await envois.ToArrayAsync()).Dump();
+
+async IAsyncEnumerable<EnvoiQueryResult> GetEnvois(IEnumerable<int> envoisIdList) {
+	var envoisIdPages = GetItemsByPages<int>(envoisId, pageSize: 80);
+	foreach (var envoisIdPage in envoisIdPages) {
+		var _envois = await GetEnvoisByEnvoisIdList(envoisIdPage);
+		foreach (var envoi in _envois) {
+			yield return envoi;
+		}
+	}
+}
 
 async Task<EnvoiQueryResult[]> GetEnvoisByEnvoisIdList(IEnumerable<int> envoisIdList) {
 	var commaSeparatedEnvoisIdList = string.Join(',', envoisIdList);
