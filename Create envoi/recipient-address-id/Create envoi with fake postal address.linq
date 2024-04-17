@@ -13,7 +13,7 @@
 
 const string webApiAddress = "http://localhost:5000/";
 const string webApiVersion = "v1";
-const string documentGedId = "20231220145701651622533812";
+const string documentGedId = "20240417104202845140274012";
 var maflyDocWebApiHttpClient =
     new HttpClient {
         BaseAddress = new Uri(webApiAddress)
@@ -32,7 +32,7 @@ var createEnvoiRequestJsonBody =
             recipient = new {
                 compteId = 70200020,
                 personneId = 482109,
-                adresseId = 574092
+                adresseId = (int?)null
             },
             mainDocumentGedId = documentGedId,
             attachementsGedIdList = Array.Empty<string>(),
@@ -46,8 +46,16 @@ var requestContent =
 var httpResponse =
     await maflyDocWebApiHttpClient
         .PostAsync(
-            $"{webApiVersion}/Envois?recipientAddressIdLocation=AddressIdProperty",
+            $"{webApiVersion}/Envois?recipientAddressIdLocation=AddressIdFromCompteId",
             requestContent);
+try {
+	httpResponse.EnsureSuccessStatusCode();
+} catch {
+	var responseContent = await httpResponse.Content.ReadAsStringAsync();
+	responseContent.Dump();
+	httpResponse.Dump();
+	throw;
+}	
 var envoiId =
     httpResponse.Headers.Location!.Segments[^1];
 var envoiJson =

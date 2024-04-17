@@ -1,5 +1,5 @@
 {
-  "subject": "Documents importants",
+  "subject": "D603149115894F359C9A134859800C1C",
   "sender": {
     "personFirstName": "John",
     "personLastName": "Smith",
@@ -9,9 +9,9 @@
   "recipient": {
     "compteId": 70200020,
     "personneId": 482109,
-    "adresseId": 491685
+    "adresseAuFormatAfnorLignes": ["monsieur Paul John", "1 rue des chatons trop mignons", "10000 le village dans les nuages", "Célesteville", "Pays de Babar"]
   },
-  "mainDocumentGedId": "20230912091208117308014431",
+  "mainDocumentGedId": "20240415180045184578454246",
   "attachementsGedIdList": [],
   "mailPostage": "ENVOI_PRIORITAIRE"
 }
