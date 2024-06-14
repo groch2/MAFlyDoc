@@ -1,9 +1,0 @@
-MAFlyDoc
-Récupération des documents qui font suite à un envoi de courrier avec accusé de réception:
-	Automatisation de la Récupération de la preuve de dépôt:
-		Si au cours de la synchronisation de l'état des envois
-			Si on traite un envoi avec accusé de réception (envoi AR)
-				Si l'envoi AR passe à l'état "Posté"
-					Alors il passe en état "preuve de dépôt à récupérer"
-				Si l'envoi AR passe en état "Accusé de reception disponible"
-					Alors il passe en état "accusé de réception à récupérer"

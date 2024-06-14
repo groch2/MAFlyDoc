@@ -7,6 +7,7 @@
   <Namespace>System.Globalization</Namespace>
   <Namespace>System.Text.Json</Namespace>
   <Namespace>System.Text.Json.Serialization</Namespace>
+  <Namespace>System.Threading.Tasks</Namespace>
 </Query>
 
 var dbContextOptions =
@@ -17,12 +18,6 @@ var dbContextOptions =
 			providerOptions => providerOptions.CommandTimeout(60))
 	    .Options;
 var context = new EnvoiCourrierDbContext(dbContextOptions);
-var envoiInitialisationDateTime =
-	DateTimeOffset.Parse(
-		"02/03/2024 +02:00",
-		CultureInfo.GetCultureInfo("fr-FR"), 
-		DateTimeStyles.AssumeLocal);
-
 var envoi = new Envoi
 {
     TransportId = 0,
@@ -45,18 +40,52 @@ var envoi = new Envoi
     MailPostageId = 0,
     NbRetriesLeft = 0,
 };
-var etatEnvoiHistoryEntry =
-	new MAFlyDoc.WebApi.Database.Model.EtatEnvoiHistoryEntry {
-		EtatEnvoi = EtatEnvoiEnum.EN_COURS_DE_TRAITEMENT, 
-		DateTime = envoiInitialisationDateTime
-	};
-envoi.EtatsEnvoiHistory =
-	new List<MAFlyDoc.WebApi.Database.Model.EtatEnvoiHistoryEntry> {
-		etatEnvoiHistoryEntry
-	};
-var envoiEntity = context.Add(envoi).Entity;
-context.SaveChanges();
-envoi.LastEtatEnvoiHistoryEntry = envoi.EtatsEnvoiHistory.First();
-context.SaveChanges();
+var envoiCreationDateTime =
+	DateTimeOffset.Parse(
+		"02/03/2020 +02:00",
+		CultureInfo.GetCultureInfo("fr-FR"),
+		DateTimeStyles.AssumeLocal);
+await CreateEnvoi(envoi, envoiCreationDateTime, context);
+
+var envoiUpdateDateTime =
+	DateTimeOffset.Parse(
+		"04/05/2020 +02:00",
+		CultureInfo.GetCultureInfo("fr-FR"),
+		DateTimeStyles.AssumeLocal);
+await UpdateEnvoiEtat(envoi, envoiUpdateDateTime, context);
 
 new { envoi.EnvoiId }.Dump();
+
+static async Task CreateEnvoi(
+	Envoi envoi,
+	DateTimeOffset creationDate,
+	EnvoiCourrierDbContext context) {
+	var etatEnvoiHistoryEntry =
+		new MAFlyDoc.WebApi.Database.Model.EtatEnvoiHistoryEntry {
+			EtatEnvoi = EtatEnvoiEnum.EN_COURS_D_ENVOI,
+			DateTime = creationDate
+		};
+	envoi.EtatsEnvoiHistory =
+		new List<MAFlyDoc.WebApi.Database.Model.EtatEnvoiHistoryEntry> {
+			etatEnvoiHistoryEntry
+		};
+	var envoiEntity = context.Add(envoi).Entity;
+	await context.SaveChangesAsync();
+	envoi.LastEtatEnvoiHistoryEntry = etatEnvoiHistoryEntry;
+	await context.SaveChangesAsync();
+}
+
+static async Task UpdateEnvoiEtat(
+	Envoi envoi,
+	DateTimeOffset envoiUpdateDate,
+	EnvoiCourrierDbContext context) {
+	var etatEnvoiHistoryEntry =
+		new MAFlyDoc.WebApi.Database.Model.EtatEnvoiHistoryEntry {
+			EtatEnvoi = EtatEnvoiEnum.EN_COURS_DE_TRAITEMENT,
+			DateTime = envoiUpdateDate
+		};
+	envoi.LastEtatEnvoiHistoryEntry = etatEnvoiHistoryEntry;
+	envoi.EtatsEnvoiHistory.Add(etatEnvoiHistoryEntry);
+	context.Update(envoi);
+	await context.SaveChangesAsync();
+}
