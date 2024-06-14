@@ -20,13 +20,20 @@ var jsonSerializerOptions =
 		Converters = { new JsonStringEnumConverter() }
 	};
 
-var envoisId = GetAllEnvoisIdFromDatabase();
+var envoisId = GetAllEnvoisIdFromDatabase(sqlServer);
 new { nbEnvoiTotal = envoisId.Count() }.Dump();
 
 var envois =
 	await SelectManyAsync(
-		GetItemsByPages(envoisId, pageSize: 80),
+		GetItemsByPages(envoisId, pageSize: 400),
 		GetEnvoisByEnvoisIdList)
+			.Select(
+				(envoi, index) => new {
+					index = index + 1,
+					envoi.EnvoiId,
+					envoi.LastEtatEnvoiHistoryEntry,
+					envoi.TransportId
+				})		
 			.ToArrayAsync();
 envois.Dump();
 
@@ -51,7 +58,7 @@ async Task<IEnumerable<EnvoiQueryResult>> GetEnvoisByEnvoisIdList(IEnumerable<in
 	return JsonSerializer.Deserialize<EnvoiQueryResult[]>(content, jsonSerializerOptions);
 }
 
-IEnumerable<IEnumerable<T>> GetItemsByPages<T>(IEnumerable<T> itemsSource, int pageSize) {
+static IEnumerable<IEnumerable<T>> GetItemsByPages<T>(IEnumerable<T> itemsSource, int pageSize) {
 	var nbItemsTotal = itemsSource.Count();
 	var skip = 0;
 	while (skip + pageSize <= nbItemsTotal) {
@@ -63,7 +70,7 @@ IEnumerable<IEnumerable<T>> GetItemsByPages<T>(IEnumerable<T> itemsSource, int p
 	}
 }
 
-IEnumerable<int> GetAllEnvoisIdFromDatabase() {
+static IEnumerable<int> GetAllEnvoisIdFromDatabase(string sqlServer) {
 	using var connection =
 		new SqlConnection($"Server={sqlServer};Database=MAFlyDoc;Integrated Security=True");
 	connection.Open();

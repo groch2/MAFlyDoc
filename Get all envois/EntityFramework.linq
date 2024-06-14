@@ -26,30 +26,72 @@ var dbContextOptions =
 			providerOptions => providerOptions.CommandTimeout(3))
 	    .Options;
 using var context = new EnvoiCourrierDbContext(dbContextOptions);
-
-var httpClient =
-	new HttpClient {
-		BaseAddress = new Uri(webApiAddress)
-	};
-var getAllEnvois =
+var envoisIdsList =
 	context
 		.Set<MAFlyDoc.WebApi.Database.Model.Envoi>()
-		.Select(envoi => envoi.EnvoiId)
-		.ToArray()
-		.Select(async envoiId =>
-			await httpClient.GetStringAsync($"v1/envois/{envoiId}"));
-await Task.WhenAll(getAllEnvois);
+		.Select(envoi => envoi.EnvoiId);
+var httpClient =
+	new HttpClient { BaseAddress = new Uri(webApiAddress) };
 var jsonSerializerOptions = new JsonSerializerOptions {
-	PropertyNameCaseInsensitive = true
+	PropertyNameCaseInsensitive = true,
+	Converters = { new JsonStringEnumConverter() }
 };
-jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-getAllEnvois.Where(response => response != null)
-	.Select(response =>
-		JsonSerializer.Deserialize<EnvoiQueryResult>(response.Result, jsonSerializerOptions))
-	.Select((envoi, index) => new {
-		index = index + 1,
-		envoi.EnvoiId,
-		envoi.LastEtatEnvoiHistoryEntry,
-		envoi.TransportId
-	})
+var envois =
+	(await Task.WhenAll(
+		GroupIntegersByMaxNbDigitsInGroups(items: envoisIdsList, maxNbDigitsInGroups: 1000)
+			.Select(envoisIdList => string.Join(',', envoisIdList))
+			.Select(async formattedEnvoisIdsList => {
+				var allEnvois =
+					await httpClient.GetStringAsync($"/v1/Envois/Envois-from-envois-id-list?comma-separated-envois-id-list={formattedEnvoisIdsList}");
+				return JsonDocument
+					.Parse(allEnvois)
+					.RootElement
+					.EnumerateArray()
+					.Select(item =>
+						JsonSerializer.Deserialize<EnvoiQueryResult>(item, jsonSerializerOptions));
+			}))).SelectMany(envoisGroup => envoisGroup);
+envois
+	.Select(
+		(envoi, index) => new {
+			index = index + 1,
+			envoi.EnvoiId,
+			envoi.LastEtatEnvoiHistoryEntry,
+			envoi.TransportId
+		})
 	.Dump();
+
+static IEnumerable<int[]> GroupIntegersByMaxNbDigitsInGroups(
+	IEnumerable<int> items,
+	int maxNbDigitsInGroups) {
+	return GroupItemsByPredicateOnState(
+		items: items,
+		statePredicate: state => state <= maxNbDigitsInGroups,
+		getNextState: (state, item) => state + GetNumberLength(item),
+		resetState: () => 0);
+
+	static int GetNumberLength(int number) =>
+		number == 0 ? 1 : (int)Math.Floor(Math.Log10(number) + 1);
+
+	static IEnumerable<T[]> GroupItemsByPredicateOnState<T, U>(
+		IEnumerable<T> items,
+		Func<U, bool> statePredicate,
+		Func<U, T, U> getNextState,
+		Func<U> resetState) {
+		var group = new List<T>();
+		var state = resetState();
+		foreach (var item in items) {
+			state = getNextState(state, item);
+			if (!statePredicate(state)) {
+				yield return group.ToArray();
+				group = new List<T>{ item };
+				state = resetState();
+				state = getNextState(state, item);
+			} else {
+				group.Add(item);
+			}
+		}
+		if (group.Any()) {
+			yield return group.ToArray();
+		}
+	}
+}
