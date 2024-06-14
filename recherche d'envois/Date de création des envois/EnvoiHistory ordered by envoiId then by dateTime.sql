@@ -1,0 +1,6 @@
+SELECT [EnvoiId]
+      ,[EtatEnvoiId]
+      ,[DateTime]
+FROM [MAFlyDoc].[dbo].[EtatEnvoiHistoryEntry]
+ORDER BY [EtatEnvoiHistoryEntry].[EnvoiId]
+,[EtatEnvoiHistoryEntry].[DateTime]
