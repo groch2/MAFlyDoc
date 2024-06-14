@@ -1,0 +1,4 @@
+pushd C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi.IntegrationTest\
+dotnet build MAFlyDoc.WebApi.IntegrationTest.csproj
+popd
+dotnet run --project "C:/TeamProjects/MAFlyDoc/MAFlyDoc/MAFlyDoc.WebApi/MAFlyDoc.WebApi.csproj" --urls="http://localhost:5000/"
