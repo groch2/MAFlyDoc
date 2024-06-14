@@ -3,7 +3,7 @@
   "defaultVariables": null,
   "documentGenerator": {
     "fromDocument": {
-      "url": "https://api-maflydoc-intra.int.maf.local/swagger/v1/swagger.json",
+      "url": "http://localhost:5000/swagger/v1/swagger.json",
       "output": null,
       "newLineBehavior": "Auto"
     }
@@ -14,7 +14,7 @@
       "configurationClass": null,
       "generateClientClasses": true,
       "suppressClientClassesOutput": false,
-      "generateClientInterfaces": true,
+      "generateClientInterfaces": false,
       "suppressClientInterfacesOutput": false,
       "clientBaseInterface": "",
       "injectHttpClient": true,
