@@ -1,0 +1,4 @@
+.vs/
+bin/
+obj/
+Web_API_Client/MAFlyDocApiClient.g.cs
