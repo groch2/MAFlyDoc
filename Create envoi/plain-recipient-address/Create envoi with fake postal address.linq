@@ -29,15 +29,16 @@ var createEnvoiRequestJsonBody =
                 companyName = "MAF",
                 userId = "john.smith@maf.fr"
             },
-			adresseAuFormatAfnorLignes = new [] {
+			AdresseDuDestinataireLignes = new [] {
 				"monsieur X",
 				"1 rue Bidule",
-				"Machin-Ville",
-				"Pays Imaginaire"
+				"75001 Paris",
+				"France"
 			},
             mainDocumentGedId = documentGedId,
             attachementsGedIdList = Array.Empty<string>(),
-            mailPostage = "ENVOI_SIMPLE"
+            mailPostage = "ENVOI_SIMPLE",
+			impression = (object)null
         });
 var requestContent =
     new StringContent(
@@ -47,7 +48,7 @@ var requestContent =
 var httpResponse =
     await maflyDocWebApiHttpClient
         .PostAsync(
-            $"{webApiVersion}/Envois/Envoi-avec-adresse-en-clair",
+            $"{webApiVersion}/Envois/Envoi-avec-adresse-du-destinataire-en-clair",
             requestContent);
 try {
 	httpResponse.EnsureSuccessStatusCode();

@@ -36,7 +36,8 @@ var createEnvoiRequestJsonBody =
             },
             mainDocumentGedId = documentGedId,
             attachementsGedIdList = Array.Empty<string>(),
-            mailPostage = "ENVOI_SIMPLE"
+            mailPostage = "ENVOI_SIMPLE",
+			impression = (object)null
         });
 var requestContent =
     new StringContent(
