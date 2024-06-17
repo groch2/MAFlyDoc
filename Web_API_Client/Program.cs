@@ -1,4 +1,4 @@
-﻿using GECO.Services.External.Api.FlyDoc;
+﻿using MAFlyDoc;
 
 var httpClient = new HttpClient { BaseAddress = new Uri("https://api-maflydoc-intra.int.maf.local/") };
 var maflyDocClient =

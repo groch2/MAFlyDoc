@@ -59,7 +59,7 @@
       "wrapResponseMethods": [],
       "generateResponseClasses": true,
       "responseClass": "ApiResponse",
-      "namespace": "GECO.Services.External.Api.FlyDoc",
+      "namespace": "MAFlyDoc",
       "requiredPropertiesMustBeDefined": true,
       "dateType": "System.DateTime",
       "jsonConverters": null,
