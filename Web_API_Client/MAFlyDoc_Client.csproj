@@ -7,6 +7,10 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
+	<Target Name="NSwag" BeforeTargets="Build">
+		<Exec Command="$(NSwagExe_Net80) run nswag.json /variables:Configuration=$(Configuration)" />
+	</Target>
+
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="NSwag.MSBuild" Version="14.0.7">

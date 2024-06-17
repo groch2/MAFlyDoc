@@ -12,18 +12,22 @@
 
 const string webApiAddress = "http://localhost:5000";
 var httpClient = new HttpClient { BaseAddress = new Uri(webApiAddress) };
-var startDate = ConvertDateTimeToString(new DateTime(year: 2024, month: 03, day: 13));
-var endDate = ConvertDateTimeToString(new DateTime(year: 2024, month: 04, day: 29));
-new { startDate, endDate }.Dump();
+var startDate = ConvertDateTimeToString(new DateTime(year: 2024, month: 03, day: 02));
+var endDate = ConvertDateTimeToString(new DateTime(year: 2024, month: 03, day: 02));
+//new { startDate, endDate }.Dump();
 //Environment.Exit(0);
 var queryPath =
-	$"/v1/Envois/Recherche-envois?MailPostages=ENVOI_PRIORITAIRE&MailPostages=ENVOI_AR&EtatsEnvoiActuel=EN_COURS_D_ENVOI&EtatsEnvoiActuel=ENVOYE&DateCreationEnvoi.From={startDate}&DateCreationEnvoi.To={endDate}";
+	$"/v1/Envois/Recherche-envois?MailPostages=ENVOI_PRIORITAIRE&MailPostages=ENVOI_AR&DateCreationEnvoi.From={startDate}&DateCreationEnvoi.To={endDate}";
 var query =
 	new HttpRequestMessage(
 		method: HttpMethod.Get,
 		requestUri: new Uri(uriString: queryPath, uriKind: UriKind.Relative));
 var response = await httpClient.SendAsync(query);
-new { responseStatusCode = response.StatusCode }.Dump();
+response.EnsureSuccessStatusCode();
+//new { responseStatusCode = response.StatusCode }.Dump();
+var responseContent = await response.Content.ReadAsStringAsync();
+JsonDocument.Parse(responseContent).Dump();
+//responseContent.Dump();
 
 var jsonSerializerOptions = 
 	new JsonSerializerOptions {
