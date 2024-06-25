@@ -1,0 +1,4 @@
+{
+	"sqlServer": "bdd-MAFlyDoc.int.maf.local",
+	"webApiAddress": "https://api-maflydoc-intra.int.maf.local/"
+}

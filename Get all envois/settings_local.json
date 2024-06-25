@@ -1,0 +1,4 @@
+{
+	"sqlServer": "(local)",
+	"webApiAddress": "http://localhost:5000/"
+}

@@ -14,7 +14,7 @@
   <IncludeLinqToSql>true</IncludeLinqToSql>
 </Query>
 
-var settings = JsonDocument.Parse(File.ReadAllText(@"C:\Users\deschaseauxr\Documents\MAFlyDoc\Get all envois\settings.json")).RootElement;
+var settings = JsonDocument.Parse(File.ReadAllText(@"C:\Users\deschaseauxr\Documents\MAFlyDoc\Get all envois\settings_local.json")).RootElement;
 var sqlServer = settings.GetProperty("sqlServer").GetString();
 var webApiAddress = settings.GetProperty("webApiAddress").GetString();
 
@@ -38,7 +38,7 @@ var jsonSerializerOptions = new JsonSerializerOptions {
 };
 var envois =
 	(await Task.WhenAll(
-		GroupIntegersByMaxNbDigitsInGroups(items: envoisIdsList, maxNbDigitsInGroups: 1000)
+		GroupIntegersByMaxNbDigitsInGroups(items: envoisIdsList, maxNbDigitsInGroups: 1500)
 			.Select(envoisIdList => string.Join(',', envoisIdList))
 			.Select(async formattedEnvoisIdsList => {
 				var allEnvois =

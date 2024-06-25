@@ -6,3 +6,4 @@ envois\ id\ list\ to\ delete.txt
 GED_documents_id_list.txt
 transport_id_list.txt
 Web_API_Client/MAFlyDocApiClient.g.cs
+**/*.7z

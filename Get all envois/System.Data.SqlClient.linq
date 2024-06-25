@@ -10,7 +10,7 @@
   <IncludeLinqToSql>true</IncludeLinqToSql>
 </Query>
 
-var settings = JsonDocument.Parse(File.ReadAllText(@"C:\Users\deschaseauxr\Documents\MAFlyDoc\Get all envois\settings.json")).RootElement;
+var settings = JsonDocument.Parse(File.ReadAllText(@"C:\Users\deschaseauxr\Documents\MAFlyDoc\Get all envois\settings_local.json")).RootElement;
 var sqlServer = settings.GetProperty("sqlServer").GetString();
 var webApiAddress = settings.GetProperty("webApiAddress").GetString();
 var httpClient = new HttpClient { BaseAddress = new Uri(webApiAddress) };
