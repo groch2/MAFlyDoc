@@ -7,3 +7,6 @@ GED_documents_id_list.txt
 transport_id_list.txt
 Web_API_Client/MAFlyDocApiClient.g.cs
 **/*.7z
+**/*.docx
+**/*.pdf
+**/*.png
