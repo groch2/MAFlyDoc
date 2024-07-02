@@ -1,29 +1,31 @@
-USE [MAFlyDoc]
+﻿USE [MAFlyDoc]
 GO
 
 -- DÉBUT Variables à modifier en fonction du test à réaliser
 DECLARE @EnvoiId AS INT = 1
 /*
 État des envois :
-EN_COURS_D_ENVOI		0
-EN_COURS_DE_TRAITEMENT	1
-ENVOYE					2
-NON_DISTRIBUE			3
-REMIS_AU_DESTINATAIRE	4
-TRAITEMENT_ECHOUE		5
-TRAITEMENT_ANNULE		6
-TRAITEMENT_REJETE		7
-ENVOI_ABANDONNE			8
-ABANDONNE_PAR_LA_MAF	9
+EN_COURS_D_ENVOI       00
+EN_COURS_DE_TRAITEMENT 01
+ENVOYE                 02
+NON_DISTRIBUE          03
+REMIS_AU_DESTINATAIRE  04
+TRAITEMENT_ECHOUE      05
+TRAITEMENT_ANNULE      06
+TRAITEMENT_REJETE      07
+ENVOI_ABANDONNE        08
+ABANDONNE_PAR_LA_MAF	 09
+AR_RECU_PAR_LA_MAF     10
+PND_RECU_PAR_LA_MAF	   11
 */
 DECLARE @EtatEnvoi AS INT = 0
-DECLARE @DateTimeEtatEnvoi AS DATETIMEOFFSET(7) = (SELECT CAST('2021-06-23T17:30:00+02:00' AS DATETIMEOFFSET))
+DECLARE @DateTimeEtatEnvoi AS DATETIMEOFFSET(7) = SYSDATETIMEOFFSET()
 -- FIN Variables à modifier en fonction du test à réaliser
 
 BEGIN TRANSACTION Reset_Etat_Envoi_History WITH MARK N'Reset envoi etat history';
 UPDATE [dbo].[Envoi]
-SET [LastEtatEnvoiHistoryEntryId] = NULL
-	,[EtatFinalErrorMessage] = NULL
+SET [LastEtatEnvoiHistoryEntryId] = NULL,
+	[EtatFinalErrorMessage] = NULL
 WHERE [EnvoiId] = @EnvoiId
 
 DELETE FROM [dbo].[EtatEnvoiHistoryEntry]
