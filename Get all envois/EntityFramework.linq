@@ -1,6 +1,6 @@
 <Query Kind="Statements">
-  <Reference>C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi.IntegrationTest\bin\Debug\net6.0\MAFlyDoc.WebApi.dll</Reference>
-  <Reference>C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi.IntegrationTest\bin\Debug\net6.0\Newtonsoft.Json.dll</Reference>
+  <Reference>C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi.IntegrationTest\bin\Debug\net8.0\MAFlyDoc.WebApi.dll</Reference>
+  <Reference>C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi.IntegrationTest\bin\Debug\net8.0\Newtonsoft.Json.dll</Reference>
   <Namespace>MAFlyDoc.WebApi.Database</Namespace>
   <Namespace>MAFlyDoc.WebApi.Database.Model</Namespace>
   <Namespace>MAFlyDoc.WebApi.Model</Namespace>
@@ -29,6 +29,8 @@ using var context = new EnvoiCourrierDbContext(dbContextOptions);
 var envoisIdsList =
 	context
 		.Set<MAFlyDoc.WebApi.Database.Model.Envoi>()
+		.Include(envoi => envoi.LastEtatEnvoiHistoryEntry)
+		.Where(envoi => envoi.LastEtatEnvoiHistoryEntry.DateTime > DateTimeOffset.Parse("01/07/2024"))
 		.Select(envoi => envoi.EnvoiId);
 var httpClient =
 	new HttpClient { BaseAddress = new Uri(webApiAddress) };
@@ -52,10 +54,19 @@ var envois =
 			}))).SelectMany(envoisGroup => envoisGroup);
 envois
 	.Select(
+		envoi => new {
+			envoi.EnvoiId,
+			Etat = envoi.LastEtatEnvoiHistoryEntry.Etat,
+			Date = DateOnly.FromDateTime(envoi.LastEtatEnvoiHistoryEntry.DateTime.Date),
+			envoi.TransportId
+		})
+	.OrderByDescending(envoi => envoi.Date)
+	.Select(
 		(envoi, index) => new {
 			index = index + 1,
 			envoi.EnvoiId,
-			envoi.LastEtatEnvoiHistoryEntry,
+			envoi.Etat,
+			envoi.Date,
 			envoi.TransportId
 		})
 	.Dump();

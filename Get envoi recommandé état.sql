@@ -5,7 +5,9 @@ SELECT [Envoi].[EnvoiId]
       ,[Subject]
       ,[EtatEnvoi].[EtatEnvoiId]
       ,[AccuseDeReceptionNumeriseParEsker]
-      ,[DocumentsArTelecharges].*
+      ,[DocumentsArTelecharges].AccuseReceptionGedId
+      -- ,[DocumentsArTelecharges].AccuseReceptionGedId_ESKER
+      -- ,[DocumentsArTelecharges].AccuseReceptionGedId_MAF
 FROM [dbo].[Envoi]
 join [dbo].[EtatEnvoiHistoryEntry] AS [EtatEnvoi]
 on [Envoi].[LastEtatEnvoiHistoryEntryId] = [EtatEnvoi].[EtatEnvoiHistoryEntryId]

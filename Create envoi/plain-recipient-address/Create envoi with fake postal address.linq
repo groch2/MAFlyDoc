@@ -1,6 +1,5 @@
 <Query Kind="Statements">
-  <Reference>C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi.IntegrationTest\bin\Debug\net6.0\MAFlyDoc.WebApi.dll</Reference>
-  <Reference>C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi.IntegrationTest\bin\Debug\net6.0\Newtonsoft.Json.dll</Reference>
+  <Reference>C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi.IntegrationTest\bin\Debug\net8.0\MAFlyDoc.WebApi.dll</Reference>
   <Namespace>MAFlyDoc.WebApi.Model</Namespace>
   <Namespace>Newtonsoft.Json</Namespace>
   <Namespace>System.Net.Http</Namespace>
@@ -11,13 +10,12 @@
   <IncludeLinqToSql>true</IncludeLinqToSql>
 </Query>
 
-const string webApiAddress = "http://localhost:5000/";
+const string environment = "int";
 const string webApiVersion = "v1";
-const string documentGedId = "20240417104202845140274012";
-var maflyDocWebApiHttpClient =
-    new HttpClient {
-        BaseAddress = new Uri(webApiAddress)
-    };
+const string webApiAddress = $"https://localhost:44377/";
+//const string webApiAddress = $"https://api-maflydoc-intra.{environment}.maf.local/";
+var maflyDocWebApiHttpClient = new HttpClient { BaseAddress = new Uri(webApiAddress) };
+const string documentGedId = "20241029175129537362218878";
 var envoiSubject = Guid.NewGuid().ToString("N").ToUpperInvariant();
 var createEnvoiRequestJsonBody =
     System.Text.Json.JsonSerializer.Serialize(
@@ -30,15 +28,18 @@ var createEnvoiRequestJsonBody =
                 userId = "john.smith@maf.fr"
             },
 			AdresseDuDestinataireLignes = new [] {
-				"monsieur X",
-				"1 rue Bidule",
-				"75001 Paris",
+				"Roch Deschaseaux",
+				"MAF Assurances - DOSI",
+				"189 boulevard Malesherbes",
+				"75856 PARIS CEDEX 17",
 				"France"
 			},
             mainDocumentGedId = documentGedId,
             attachementsGedIdList = Array.Empty<string>(),
-            mailPostage = "ENVOI_SIMPLE",
-			impression = (object)null
+            mailPostage = "ENVOI_AR",
+			//pageAdresse = PageAdresse.AVEC,
+			pageAdresse = (object)null,
+			impression = (object)null,
         });
 var requestContent =
     new StringContent(

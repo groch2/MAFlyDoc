@@ -1,5 +1,5 @@
 <Query Kind="Statements">
-  <Reference>C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi\bin\Debug\net6.0\MAFlyDoc.WebApi.dll</Reference>
+  <Reference>C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi\bin\Debug\net8.0\MAFlyDoc.WebApi.dll</Reference>
   <Namespace>MAFlyDoc.WebApi.Database</Namespace>
   <Namespace>MAFlyDoc.WebApi.Database.Model</Namespace>
   <Namespace>MAFlyDoc.WebApi.Model</Namespace>
@@ -15,7 +15,7 @@ var dbContextOptions =
 using var context = new EnvoiCourrierDbContext(dbContextOptions);
 var envoi =
     new MAFlyDoc.WebApi.Database.Model.Envoi {
-        TransportId = 954622401926341001,
+        TransportId = null,
         Sender = new MAFlyDoc.WebApi.Database.Model.Sender {
             PersonFirstName = "Test",
             PersonLastName = "Test",
@@ -29,15 +29,18 @@ var envoi =
             CompteId = 0,
             PersonneId = 0,
         },
-        MainDocumentGedId = "20240708135151448765050288",
+        MainDocumentGedId = "20241029110226501112818622",
         MailPostageId = MailPostage.ENVOI_AR,
         NbRetriesLeft = 0,
-		DocumentsArTelecharges = new()
+		AccuseDeReceptionNumeriseParEsker = true,
+		DocumentsArTelecharges = new DocumentsArTelecharges(),
+		PreuveDeDepotReference = "3993F35C938744FF865C057A2036FE2C",
+		Subject = "4981071E76D34E74833BEF4A8E9F1206"
     };
 var etatEnvoiEnCoursDeTraitement =
     new MAFlyDoc.WebApi.Database.Model.EtatEnvoiHistoryEntry {
         DateTime = DateTimeOffset.UtcNow,
-        EtatEnvoi = EtatEnvoiEnum.EN_COURS_DE_TRAITEMENT
+        EtatEnvoi = EtatEnvoiEnum.EN_COURS_D_ENVOI
     };
 envoi.EtatsEnvoiHistory = new[] { etatEnvoiEnCoursDeTraitement };
 var envoiEntity = (await context.Envois.AddAsync(envoi)).Entity;

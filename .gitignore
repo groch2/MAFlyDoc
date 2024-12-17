@@ -10,3 +10,16 @@ Web_API_Client/MAFlyDocApiClient.g.cs
 **/*.docx
 **/*.pdf
 **/*.png
+**/*.jpg
+envoi_id_list.txt
+envois-id-list-AR-INT.txt
+envoi_id_list.txt
+Référence sur la preuve de dépôt/Test réel d'envoi en recommandé.txt
+TransportsIdList.txt
+erreurs d'envoi de courrier en prod.json
+envoi_id_list.txt
+envoi_id_list.txt
+TransportsIdList.txt
+La synchro ne fonctionne plus en production/Tous+les+messages.csv
+La synchro ne fonctionne plus en production/sauvegarde du dernier etat de tous les envois.txt
+La synchro ne fonctionne plus en production/Tout+Depuis+07_04_2013.csv

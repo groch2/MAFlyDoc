@@ -1,6 +1,4 @@
 <Query Kind="Statements">
-  <Reference>C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi.IntegrationTest\bin\Debug\net6.0\MAFlyDoc.WebApi.dll</Reference>
-  <Namespace>MAFlyDoc.WebApi.Model</Namespace>
   <Namespace>System.Net.Http</Namespace>
   <Namespace>System.Threading.Tasks</Namespace>
   <Namespace>System.Web</Namespace>
@@ -19,3 +17,5 @@ var response =
 		content: null);
 new { response.StatusCode, response.ReasonPhrase }.Dump();
 response.EnsureSuccessStatusCode();
+"Synchronisation lancée à: ".Dump();
+DateTime.Now.Dump();
