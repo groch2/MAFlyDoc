@@ -1,7 +1,6 @@
 <Query Kind="Statements">
   <Reference>C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi\bin\Debug\net8.0\MAFlyDoc.WebApi.dll</Reference>
   <Namespace>MAFlyDoc.WebApi.Model</Namespace>
-  <Namespace>System.Data.SqlClient</Namespace>
   <Namespace>System.Net.Http</Namespace>
   <Namespace>System.Text.Json</Namespace>
   <Namespace>System.Text.Json.Nodes</Namespace>
@@ -10,9 +9,8 @@
   <IncludeLinqToSql>true</IncludeLinqToSql>
 </Query>
 
-const string ENVIRONNEMENT_MAF = "local";
+const string ENVIRONNEMENT_MAF = "prd";
 var settings = JsonDocument.Parse(File.ReadAllText(@$"C:\Users\deschaseauxr\Documents\MAFlyDoc\Get all envois\settings_{ENVIRONNEMENT_MAF}.json")).RootElement;
-var sqlServer = settings.GetProperty("sqlServer").GetString();
 var webApiAddress = settings.GetProperty("webApiAddress").GetString();
 var httpClient = new HttpClient { BaseAddress = new Uri(webApiAddress) };
 var jsonSerializerOptions = 
@@ -21,8 +19,7 @@ var jsonSerializerOptions =
 		Converters = { new JsonStringEnumConverter() }
 	};
 
-var envoisId = GetAllEnvoisIdFromDatabase(sqlServer);
-new { nbEnvoiTotal = envoisId.Count() }.Dump();
+var envoisId = new [] {29082,29092,29100,29102,29110,29112,29138};
 
 var envois =
 	await SelectManyAsync(
@@ -33,7 +30,8 @@ var envois =
 					index = index + 1,
 					envoi.EnvoiId,
 					envoi.LastEtatEnvoiHistoryEntry,
-					envoi.TransportId
+					//envoi.TransportId,
+					envoi.MailPostage
 				})		
 			.ToArrayAsync();
 envois.Dump();
@@ -69,16 +67,4 @@ static IEnumerable<IEnumerable<T>> GetItemsByPages<T>(IEnumerable<T> itemsSource
 	if (skip < nbItemsTotal) {
 		yield return itemsSource.Skip(skip).Take(pageSize);
 	}
-}
-
-static IEnumerable<int> GetAllEnvoisIdFromDatabase(string sqlServer) {
-	using var connection =
-		new SqlConnection($"Server={sqlServer};Database=MAFlyDoc;Integrated Security=True");
-	connection.Open();
-	using var command = connection.CreateCommand();
-	command.CommandText = "SELECT [EnvoiId] FROM [dbo].[Envoi]";
-	var dataTable = new DataTable();
-	var dataAdapter = new SqlDataAdapter(command);
-	dataAdapter.Fill(dataTable);
-	return dataTable.AsEnumerable().Select(r => (int)r[0]);
 }
