@@ -7,10 +7,10 @@
 
 var dbContextOptions =
 	new DbContextOptionsBuilder<EnvoiCourrierDbContext>()
-		.UseSqlServer("Server=(local);Database=MAFlyDoc;Trusted_Connection=True;", providerOptions => providerOptions.CommandTimeout(60))
+		.UseSqlServer("Server=(local);Database=MAFlyDoc;Trusted_Connection=True;", providerOptions => providerOptions.CommandTimeout(3))
 	    .Options;
 var context = new EnvoiCourrierDbContext(dbContextOptions);
-var envoiIdList = "1,2,3".Split(',').Select(int.Parse).ToHashSet();
+var envoiIdList = Enumerable.Range(1, 3).ToHashSet();
 var envoisToDelete =
 	context
 		.Envois

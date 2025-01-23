@@ -14,7 +14,7 @@ var dbContextOptions =
 		.EnableSensitiveDataLogging()
 		.UseSqlServer(
 			"Server=(local);Database=MAFlyDoc;Trusted_Connection=True;",
-			providerOptions => providerOptions.CommandTimeout(3))
+			providerOptions => providerOptions.CommandTimeout(1))
 	    .Options;
 var context = new EnvoiCourrierDbContext(dbContextOptions);
 var envoiInitialisationDateTime =
@@ -59,7 +59,7 @@ File
 			new MAFlyDoc.WebApi.Database.Model.EtatEnvoiHistoryEntry {
 				EtatEnvoi = EtatEnvoiEnum.EN_COURS_D_ENVOI, 
 				DateTime = envoiInitialisationDateTime,
-			};
+			};		
 		envoi.EtatsEnvoiHistory =
 			new List<MAFlyDoc.WebApi.Database.Model.EtatEnvoiHistoryEntry> {
 				envoiInitialisationHistoryEntry,

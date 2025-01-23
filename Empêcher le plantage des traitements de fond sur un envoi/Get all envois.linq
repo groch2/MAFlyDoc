@@ -14,8 +14,7 @@
   <IncludeLinqToSql>true</IncludeLinqToSql>
 </Query>
 
-const string environment = "local";
-var settings = JsonDocument.Parse(File.ReadAllText(@$"C:\Users\deschaseauxr\Documents\MAFlyDoc\Get all envois\settings_{environment}.json")).RootElement;
+var settings = JsonDocument.Parse(File.ReadAllText(@"C:\Users\deschaseauxr\Documents\MAFlyDoc\Get all envois\settings_local.json")).RootElement;
 var sqlServer = settings.GetProperty("sqlServer").GetString();
 var webApiAddress = settings.GetProperty("webApiAddress").GetString();
 
