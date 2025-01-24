@@ -6,9 +6,9 @@
   <Namespace>MAFlyDoc.WebApi.Model</Namespace>
   <Namespace>Microsoft.EntityFrameworkCore</Namespace>
   <Namespace>System.Data.SqlClient</Namespace>
+  <Namespace>System.Globalization</Namespace>
   <Namespace>System.Net.Http</Namespace>
   <Namespace>System.Text.Json</Namespace>
-  <Namespace>System.Text.Json.Nodes</Namespace>
   <Namespace>System.Text.Json.Serialization</Namespace>
   <Namespace>System.Threading.Tasks</Namespace>
   <IncludeLinqToSql>true</IncludeLinqToSql>
@@ -32,6 +32,8 @@ var envoisIdsList =
 		.Include(envoi => envoi.LastEtatEnvoiHistoryEntry)
 		//.Where(envoi => envoi.LastEtatEnvoiHistoryEntry.DateTime > DateTimeOffset.Parse("01/07/2024"))
 		.Select(envoi => envoi.EnvoiId);
+//envoisIdsList.Dump();
+//Environment.Exit(0);
 var httpClient =
 	new HttpClient { BaseAddress = new Uri(webApiAddress) };
 var jsonSerializerOptions = new JsonSerializerOptions {
@@ -56,27 +58,31 @@ envois
 	.Select(
 		envoi => new {
 			envoi.EnvoiId,
-			Etat = envoi.LastEtatEnvoiHistoryEntry.Etat,
-			Date = DateOnly.FromDateTime(envoi.LastEtatEnvoiHistoryEntry.DateTime.Date),
+			//Etat = envoi.LastEtatEnvoiHistoryEntry.Etat,
+			//Date = DateOnly.FromDateTime(envoi.LastEtatEnvoiHistoryEntry.DateTime.Date),
+			envoi.LastEtatEnvoiHistoryEntry.DateTime,
 			History =
 				envoi
 					.EtatsEnvoiHistoryEntriesList
+					.OrderByDescending(entry => entry.DateTime)					
 					.Select(
 						entry =>
 							new {
-								Date = DateOnly.FromDateTime(entry.DateTime.Date),
-								entry.Etat
+								//Date = DateOnly.FromDateTime(entry.DateTime.Date),
+								//Date = entry.DateTime,
+								Date = entry.DateTime.ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture),
+								entry.Etat,
 							}),
 			envoi.MailPostage,
 			envoi.TransportId,
 		})
-	.OrderByDescending(envoi => envoi.Date)
+	.OrderByDescending(envoi => envoi.DateTime)
 	.Select(
 		(envoi, index) => new {
 			index = index + 1,
 			envoi.EnvoiId,
-			envoi.Etat,
-			envoi.Date,
+			//envoi.Etat,
+			//envoi.Date,
 			envoi.History,
 			envoi.MailPostage,
 			envoi.TransportId,

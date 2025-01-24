@@ -11,7 +11,7 @@ var dbContextOptions =
 	new DbContextOptionsBuilder<EnvoiCourrierDbContext>()
 		.UseSqlServer(
 			"Server=(local);Database=MAFlyDoc;Trusted_Connection=True;",
-			providerOptions => providerOptions.CommandTimeout(3))
+			providerOptions => providerOptions.CommandTimeout(1))
 	    .Options;
 using var context = new EnvoiCourrierDbContext(dbContextOptions);
 var envoi =
