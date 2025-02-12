@@ -25,19 +25,16 @@ var envoiIdList =
 			var envoiConfirmationDateTime =
 				DateTimeOffset.ParseExact(input: data[1], format: "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal);
 			var envoiInitialisationDateTime = envoiConfirmationDateTime.AddMinutes(-1);
-			var envoi = new Envoi
-			{
+			var envoi = new Envoi {
 			    TransportId = long.Parse(transportId),
-			    Sender = new Sender
-			    {
+			    Sender = new Sender {
 			        PersonFirstName = "Test",
 			        PersonLastName = "Test",
 			        CompanyName = "Test",
 			        SenderId = 0,
 			        UserId = "Test",
 			    },
-			    Recipient = new Recipient
-			    {
+			    Recipient = new Recipient {
 			        AdresseAfnor = "Test",
 			        AdresseId = 0,
 			        CompteId = 0,
@@ -46,6 +43,7 @@ var envoiIdList =
 			    MainDocumentGedId = "20250121091615772173743005",
 			    MailPostageId = MailPostage.ENVOI_AR,
 			    NbRetriesLeft = 0,
+				DocumentsArTelecharges = new DocumentsArTelecharges(),
 			};
 			var envoiInitialisationHistoryEntry =
 				new MAFlyDoc.WebApi.Database.Model.EtatEnvoiHistoryEntry {

@@ -23,3 +23,9 @@ TransportsIdList.txt
 La synchro ne fonctionne plus en production/Tous+les+messages.csv
 La synchro ne fonctionne plus en production/sauvegarde du dernier etat de tous les envois.txt
 La synchro ne fonctionne plus en production/Tout+Depuis+07_04_2013.csv
+téléchargement des PND/liste des envois recommandés non distribués avec le GED id des PND.xlsx
+Empêcher le plantage des traitements de fond sur un envoi/envois id list.txt
+Empêcher le plantage des traitements de fond sur un envoi/envois initialization data.txt
+données supplémentaires pour les documents d'envoi reco PAPS/spécifications.txt
+téléchargement des PND/Create envois in PND from transport id list.linq
+test de téléchargement de documents d'envois en recommandé/Create envois reco from transport id list.linq

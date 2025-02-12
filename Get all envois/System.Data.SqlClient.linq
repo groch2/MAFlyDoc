@@ -10,7 +10,7 @@
   <IncludeLinqToSql>true</IncludeLinqToSql>
 </Query>
 
-const string ENVIRONNEMENT_MAF = "local";
+const string ENVIRONNEMENT_MAF = "int";
 var settings = JsonDocument.Parse(File.ReadAllText(@$"C:\Users\deschaseauxr\Documents\MAFlyDoc\Get all envois\settings_{ENVIRONNEMENT_MAF}.json")).RootElement;
 var sqlServer = settings.GetProperty("sqlServer").GetString();
 var webApiAddress = settings.GetProperty("webApiAddress").GetString();
@@ -33,7 +33,8 @@ var envois =
 					index = index + 1,
 					envoi.EnvoiId,
 					envoi.LastEtatEnvoiHistoryEntry,
-					envoi.TransportId
+					envoi.TransportId,
+					envoi.EtatFinalErrorMessage,
 				})		
 			.ToArrayAsync();
 envois.Dump();

@@ -16,6 +16,7 @@ envoiCourrierDbContext.Envois
     .Include(envoi => envoi.AttachementsList)
     .Include(envoi => envoi.EtatsEnvoiHistory)
     .Include(envoi => envoi.LastEtatEnvoiHistoryEntry)
+	.Include(envoi => envoi.DocumentsArTelecharges)
 	.ToList()
 	.ForEach(DeleteEnvoiFromDatabase);
 envoiCourrierDbContext.SaveChanges();
@@ -38,6 +39,9 @@ void DeleteEnvoiFromDatabase(MAFlyDoc.WebApi.Database.Model.Envoi envoiToDelete)
 	        .RemoveRange(
 	            envoiEtatHistory!);
 		envoiCourrierDbContext.SaveChanges();
+	}
+	if (envoiToDelete.DocumentsArTelecharges != null) {
+		envoiToDelete.DocumentsArTelecharges = null;
 	}
 	envoiCourrierDbContext.Envois.Remove(envoiToDelete);
 	envoiCourrierDbContext.SaveChanges();

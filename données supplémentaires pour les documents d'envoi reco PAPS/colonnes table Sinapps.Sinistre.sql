@@ -1,0 +1,8 @@
+use Sinistre
+go
+select C.COLUMN_NAME, C.DATA_TYPE, C.CHARACTER_OCTET_LENGTH, C.IS_NULLABLE
+from INFORMATION_SCHEMA.COLUMNS C
+where C.TABLE_CATALOG = 'Sinistre'
+and C.TABLE_SCHEMA = 'Sinapps'
+and C.TABLE_NAME = 'Sinistre'
+order by C.COLUMN_NAME

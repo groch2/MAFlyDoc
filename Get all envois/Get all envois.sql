@@ -2,10 +2,11 @@ use MAFlyDoc
 go
 select
   [Envoi].[EnvoiId],
+  [Envoi].[TransportId],
   case [Envoi].[MailPostageId]
-    when 1 then 'ENVOI_PRIORITAIRE'
-    when 2 then 'ENVOI_SIMPLE'
-    when 3 then 'ENVOI_AR'
+    when 0 then 'ENVOI_PRIORITAIRE'
+    when 1 then 'ENVOI_SIMPLE'
+    when 2 then 'ENVOI_RECO'
   end as [MailPostage],
   case [EtatEnvoiHistoryEntry].[EtatEnvoiId]
     when 0 then 'EN_COURS_D_ENVOI'
