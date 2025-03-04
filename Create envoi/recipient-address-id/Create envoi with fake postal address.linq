@@ -13,7 +13,7 @@
 
 const string webApiAddress = "https://localhost:44377/";
 const string webApiVersion = "v1";
-const string documentGedId = "20240417104202845140274012";
+const string documentGedId = "20250303113730025207454500";
 var maflyDocWebApiHttpClient =
     new HttpClient {
         BaseAddress = new Uri(webApiAddress)
@@ -30,8 +30,8 @@ var createEnvoiRequestJsonBody =
                 userId = "john.smith@maf.fr"
             },
             recipient = new {
-                compteId = 70200020,
-                personneId = 482109,
+                compteId = 401373,
+                personneId = 531219,
                 adresseId = (int?)null
             },
             mainDocumentGedId = documentGedId,

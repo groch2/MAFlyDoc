@@ -15,7 +15,7 @@ const string webApiVersion = "v1";
 const string webApiAddress = $"https://localhost:44377/";
 //const string webApiAddress = $"https://api-maflydoc-intra.{environment}.maf.local/";
 var maflyDocWebApiHttpClient = new HttpClient { BaseAddress = new Uri(webApiAddress) };
-const string documentGedId = "20241029175129537362218878";
+const string documentGedId = "20250303113730025207454500";
 var envoiSubject = Guid.NewGuid().ToString("N").ToUpperInvariant();
 var createEnvoiRequestJsonBody =
     System.Text.Json.JsonSerializer.Serialize(
