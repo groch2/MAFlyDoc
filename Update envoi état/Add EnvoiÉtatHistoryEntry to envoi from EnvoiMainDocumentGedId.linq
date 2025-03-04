@@ -1,6 +1,5 @@
 <Query Kind="Statements">
-  <Reference>C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi\bin\Debug\net6.0\MAFlyDoc.WebApi.dll</Reference>
-  <Reference Relative="..\..\microsoft.extensions.logging.abstractions.8.0.0-rc.2.23479.6\lib\net7.0\Microsoft.Extensions.Logging.Abstractions.dll">&lt;MyDocuments&gt;\microsoft.extensions.logging.abstractions.8.0.0-rc.2.23479.6\lib\net7.0\Microsoft.Extensions.Logging.Abstractions.dll</Reference>
+  <Reference>C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi\bin\Debug\net8.0\MAFlyDoc.WebApi.dll</Reference>
   <Namespace>MAFlyDoc.WebApi.Database</Namespace>
   <Namespace>MAFlyDoc.WebApi.Database.Model</Namespace>
   <Namespace>MAFlyDoc.WebApi.Model</Namespace>
@@ -10,7 +9,7 @@
   <Namespace>System.Globalization</Namespace>
 </Query>
 
-const string envoiMainDocumentGedId = "20230828175135721281802470";
+const string envoiMainDocumentGedId = "20250212163301757520084885";
 const EtatEnvoiEnum newEnvoiEtat = EtatEnvoiEnum.EN_COURS_D_ENVOI;
 // JJ/MM/AAAA HH:MM
 const string envoiEtatDateTime = "10/09/2022 10:00";
