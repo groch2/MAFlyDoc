@@ -1,6 +1,6 @@
 <Query Kind="Statements">
-  <Reference>C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi.IntegrationTest\bin\Debug\net6.0\MAFlyDoc.WebApi.dll</Reference>
-  <Reference>C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi.IntegrationTest\bin\Debug\net6.0\Newtonsoft.Json.dll</Reference>
+  <Reference>C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi\bin\Debug\net8.0\MAFlyDoc.WebApi.dll</Reference>
+  <Reference>C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi\bin\Debug\net8.0\Newtonsoft.Json.dll</Reference>
   <Namespace>MAFlyDoc.WebApi.Model</Namespace>
   <Namespace>Newtonsoft.Json</Namespace>
   <Namespace>System.Net.Http</Namespace>
@@ -11,7 +11,7 @@
   <IncludeLinqToSql>true</IncludeLinqToSql>
 </Query>
 
-const string webApiAddress = "http://localhost:5000/";
+const string webApiAddress = "https://localhost:44377/";
 const string webApiVersion = "v1";
 const string documentGedId = "20240417104202845140274012";
 var maflyDocWebApiHttpClient =
@@ -35,7 +35,8 @@ var createEnvoiRequestJsonBody =
                 adresseId = (int?)null
             },
             mainDocumentGedId = documentGedId,
-            attachementsGedIdList = Array.Empty<string>(),
+            //attachementsGedIdList = Array.Empty<string>(),
+			attachementsGedIdList = (object)null,
             mailPostage = "ENVOI_SIMPLE",
 			impression = (object)null
         });

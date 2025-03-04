@@ -1,5 +1,5 @@
 <Query Kind="Statements">
-  <Reference>C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi.IntegrationTest\bin\Debug\net8.0\MAFlyDoc.WebApi.dll</Reference>
+  <Reference>C:\TeamProjects\MAFlyDoc\MAFlyDoc\MAFlyDoc.WebApi\bin\Debug\net8.0\MAFlyDoc.WebApi.dll</Reference>
   <Namespace>MAFlyDoc.WebApi.Model</Namespace>
   <Namespace>Newtonsoft.Json</Namespace>
   <Namespace>System.Net.Http</Namespace>
@@ -35,7 +35,7 @@ var createEnvoiRequestJsonBody =
 				"France"
 			},
             mainDocumentGedId = documentGedId,
-            attachementsGedIdList = Array.Empty<string>(),
+            attachementsGedIdList = (object)null,
             mailPostage = "ENVOI_AR",
 			//pageAdresse = PageAdresse.AVEC,
 			pageAdresse = (object)null,
