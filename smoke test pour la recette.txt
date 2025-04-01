@@ -1,0 +1,19 @@
+familles
+	PAPS + n° de sinistre en référence (AV_1234567 MA-24-443-8858090-J)
+	DOCUMENTS CONTRAT + n° adhérent (AV_2345678 20023200)
++ envoi en recommandé à une adresse existante mais un nom de destinataire faux
+	Roch Deschaseaux 74 cours de Vincennes 75012
+expéditeur: Alexis
+
+
+DOCUMENTS PAPS :
+  MAFlyDoc: https://api-maflydoc-intra.rec.maf.local/v1/Envois/34921
+  Esker: https://as1.ondemand.esker.com/ondemand/webaccess/asd/FlexibleForm/FlexibleForm.aspx?action=run&layout=_flexibleform&Id=MOD.1249907243515944279
+
+DOCUMENTS CONTRAT :
+  MAFlyDoc: https://api-maflydoc-intra.rec.maf.local/v1/Envois/34922
+  Esker: https://as1.ondemand.esker.com/ondemand/webaccess/asd/FlexibleForm/FlexibleForm.aspx?action=run&layout=_flexibleform&Id=MOD.1249924835701988829
+
+test envoi en recommandé à un destinataire qui n'habite pas à l'adresse indiquée :
+  MAFlyDoc: https://api-maflydoc-intra.rec.maf.local/v1/Envois/34923
+  Esker: https://as1.ondemand.esker.com/ondemand/webaccess/asd/FlexibleForm/FlexibleForm.aspx?action=run&layout=_flexibleform&Id=MOD.1249907243515944633

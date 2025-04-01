@@ -22,10 +22,10 @@ var createEnvoiRequestJsonBody =
         new {
             subject = envoiSubject,
             sender = new {
-                personFirstName = "John",
-                personLastName = "Smith",
-                companyName = "MAF",
-                userId = "john.smith@maf.fr"
+                personFirstName = "Roch",
+                personLastName = "Deschaseaux",
+                companyName = "Maf",
+                userId = "roch.deschaseaux@maf.fr"
             },
 			AdresseDuDestinataireLignes = new [] {
 				"Roch Deschaseaux",
@@ -36,10 +36,11 @@ var createEnvoiRequestJsonBody =
 			},
             mainDocumentGedId = documentGedId,
             attachementsGedIdList = (object)null,
-            mailPostage = "ENVOI_AR",
+            mailPostage = "ENVOI_SIMPLE",
 			//pageAdresse = PageAdresse.AVEC,
 			pageAdresse = (object)null,
 			impression = (object)null,
+			//referenceAR = "C1A31932C754446DB05F221295E8F23E",
         });
 var requestContent =
     new StringContent(

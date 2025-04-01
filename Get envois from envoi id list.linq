@@ -9,7 +9,7 @@
   <IncludeLinqToSql>true</IncludeLinqToSql>
 </Query>
 
-const string ENVIRONNEMENT_MAF = "prd";
+const string ENVIRONNEMENT_MAF = "int";
 var settings = JsonDocument.Parse(File.ReadAllText(@$"C:\Users\deschaseauxr\Documents\MAFlyDoc\Get all envois\settings_{ENVIRONNEMENT_MAF}.json")).RootElement;
 var webApiAddress = settings.GetProperty("webApiAddress").GetString();
 var httpClient = new HttpClient { BaseAddress = new Uri(webApiAddress) };
@@ -19,24 +19,36 @@ var jsonSerializerOptions =
 		Converters = { new JsonStringEnumConverter() }
 	};
 
-var envoisId = new [] {29082,29092,29100,29102,29110,29112,29138};
+var envois_id_list = File.ReadAllLines(@"C:\Users\deschaseauxr\Documents\MAFlyDoc\envoi_id_list.txt").Select(int.Parse).ToArray();
+$"nombre d'envois: {envois_id_list.Length}".Dump();
 
 var envois =
 	await SelectManyAsync(
-		GetItemsByPages(envoisId, pageSize: 400),
+		GroupIntegersByMaxNbDigitsInGroups(items: envois_id_list, maxNbDigitsInGroups: 1500),
 		GetEnvoisByEnvoisIdList)
 			.Select(
 				(envoi, index) => new {
 					index = index + 1,
 					envoi.EnvoiId,
-					envoi.LastEtatEnvoiHistoryEntry,
-					//envoi.TransportId,
+					envoi.EtatsEnvoiHistoryEntriesList,
+					//envoi.LastEtatEnvoiHistoryEntry,
+					envoi.TransportId,
 					envoi.MailPostage
 				})		
 			.ToArrayAsync();
 envois.Dump();
 
-async IAsyncEnumerable<U> SelectManyAsync<T, U>(
+async Task<IEnumerable<EnvoiQueryResult>> GetEnvoisByEnvoisIdList(IEnumerable<int> envoisIdList) {
+	var commaSeparatedEnvoisIdList = string.Join(',', envoisIdList);
+	var getAllEnvoisResponse =
+		await httpClient.GetAsync(
+			$"/v1/Envois/Envois-from-envois-id-list?comma-separated-envois-id-list={commaSeparatedEnvoisIdList}&with-etat-envoi-history=true");
+	getAllEnvoisResponse.EnsureSuccessStatusCode();
+	var content = await getAllEnvoisResponse.Content.ReadAsStringAsync();
+	return JsonSerializer.Deserialize<EnvoiQueryResult[]>(content, jsonSerializerOptions);
+}
+
+static async IAsyncEnumerable<U> SelectManyAsync<T, U>(
 	IEnumerable<IEnumerable<T>> sourceItemsPages,
 	Func<IEnumerable<T>, Task<IEnumerable<U>>> func) {
 	foreach (var page in sourceItemsPages) {
@@ -47,24 +59,38 @@ async IAsyncEnumerable<U> SelectManyAsync<T, U>(
 	}
 }
 
-async Task<IEnumerable<EnvoiQueryResult>> GetEnvoisByEnvoisIdList(IEnumerable<int> envoisIdList) {
-	var commaSeparatedEnvoisIdList = string.Join(',', envoisIdList);
-	var getAllEnvoisResponse =
-		await httpClient.GetAsync(
-			$"/v1/Envois/Envois-from-envois-id-list?comma-separated-envois-id-list={commaSeparatedEnvoisIdList}");
-	getAllEnvoisResponse.EnsureSuccessStatusCode();
-	var content = await getAllEnvoisResponse.Content.ReadAsStringAsync();
-	return JsonSerializer.Deserialize<EnvoiQueryResult[]>(content, jsonSerializerOptions);
-}
+static IEnumerable<int[]> GroupIntegersByMaxNbDigitsInGroups(
+	IEnumerable<int> items,
+	int maxNbDigitsInGroups) {
+	return GroupItemsByPredicateOnState(
+		items: items,
+		statePredicate: state => state <= maxNbDigitsInGroups,
+		getNextState: (state, item) => state + GetNumberLength(item),
+		resetState: () => 0);
 
-static IEnumerable<IEnumerable<T>> GetItemsByPages<T>(IEnumerable<T> itemsSource, int pageSize) {
-	var nbItemsTotal = itemsSource.Count();
-	var skip = 0;
-	while (skip + pageSize <= nbItemsTotal) {
-		yield return itemsSource.Skip(skip).Take(pageSize);
-		skip += pageSize;
-	}
-	if (skip < nbItemsTotal) {
-		yield return itemsSource.Skip(skip).Take(pageSize);
+	static int GetNumberLength(int number) =>
+		number == 0 ? 1 : (int)Math.Floor(Math.Log10(number) + 1);
+
+	static IEnumerable<T[]> GroupItemsByPredicateOnState<T, U>(
+		IEnumerable<T> items,
+		Func<U, bool> statePredicate,
+		Func<U, T, U> getNextState,
+		Func<U> resetState) {
+		var group = new List<T>();
+		var state = resetState();
+		foreach (var item in items) {
+			state = getNextState(state, item);
+			if (!statePredicate(state)) {
+				yield return group.ToArray();
+				group = new List<T>{ item };
+				state = resetState();
+				state = getNextState(state, item);
+			} else {
+				group.Add(item);
+			}
+		}
+		if (group.Any()) {
+			yield return group.ToArray();
+		}
 	}
 }
