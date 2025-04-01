@@ -50,7 +50,7 @@ var envois =
 					.EnumerateArray()
 					.Select(item =>
 						JsonSerializer.Deserialize<EnvoiQueryResult>(item, jsonSerializerOptions));
-			}))).SelectMany(envoisGroup => envoisGroup);
+			}))).SelectMany(envois => envois);
 envois
 	.Select(
 		envoi => new {
