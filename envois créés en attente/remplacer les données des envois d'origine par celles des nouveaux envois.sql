@@ -201,6 +201,8 @@ insert into #envoi_id_origin_target values
 (39674, 39990),
 (39675, 39963)
 
+BEGIN TRANSACTION;
+
 DECLARE @Envoi_id_origin int;
 DECLARE @Envoi_id_target int;
 
@@ -242,3 +244,5 @@ BEGIN
 END
 
 DROP TABLE #envoi_id_origin_target;
+
+COMMIT TRANSACTION;
