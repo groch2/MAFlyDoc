@@ -201,12 +201,12 @@ insert into #envoi_id_origin_surrogate values
 (39674, 39990),
 (39675, 39963)
 
-DECLARE @Envoi_origin_id int
-DECLARE @Envoi_surrogate_id int
+DECLARE @Envoi_id_origine int;
+DECLARE @Envoi_id_target int;
 
 SELECT TOP(1)
-  @Envoi_origin_id = Envoi_origin_id,
-  @Envoi_surrogate_id = Envoi_surrogate_id
+  @Envoi_id_origine = Envoi_origin_id,
+  @Envoi_id_target = Envoi_surrogate_id
 FROM #envoi_id_origin_surrogate
 
 WHILE @@ROWCOUNT <> 0
@@ -229,12 +229,12 @@ BEGIN
   WHERE [EnvoiId] = @Envoi_id_origine
 
   DELETE FROM #envoi_id_origin_surrogate
-  WHERE Envoi_origin_id = @Envoi_origin_id
-  and Envoi_surrogate_id = @Envoi_surrogate_id
+  WHERE Envoi_origin_id = @Envoi_id_origine
+  and Envoi_surrogate_id = @Envoi_id_target
 
   SELECT TOP(1)
-    @Envoi_origin_id = Envoi_origin_id,
-    @Envoi_surrogate_id = Envoi_surrogate_id
+    @Envoi_id_origine = Envoi_origin_id,
+    @Envoi_id_target = Envoi_surrogate_id
   FROM #envoi_id_origin_surrogate
 END
 
