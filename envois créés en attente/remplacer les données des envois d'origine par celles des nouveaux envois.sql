@@ -211,6 +211,8 @@ FROM #envoi_id_origin_target
 
 WHILE @@ROWCOUNT <> 0
 BEGIN
+  -- remplacer les données de envoi_origin par celles de envoi_target
+  -- DÉBUT
   UPDATE [dbo].[Envoi]
   SET [LastEtatEnvoiHistoryEntryId] = NULL
   ,[EtatFinalErrorMessage] = NULL
@@ -231,6 +233,7 @@ BEGIN
   DELETE FROM #envoi_id_origin_target
   WHERE Envoi_id_origin = @Envoi_id_origin
   and Envoi_id_target = @Envoi_id_target
+  -- FIN
 
   SELECT TOP(1)
     @Envoi_id_origin = Envoi_id_origin,

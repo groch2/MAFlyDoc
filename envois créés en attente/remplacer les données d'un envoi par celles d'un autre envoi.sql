@@ -20,7 +20,6 @@ UPDATE [dbo].[Envoi]
 SET [LastEtatEnvoiHistoryEntryId] = IDENT_CURRENT('[dbo].[EtatEnvoiHistoryEntry]')
 WHERE [EnvoiId] = @envoi_id_origine
 
-/*
 select
   CASE [EtatEnvoiHistoryEntry].[EtatEnvoiId]
     WHEN 0 THEN 'EN_COURS_D_ENVOI'
@@ -40,6 +39,5 @@ select
 from [dbo].[EtatEnvoiHistoryEntry]
 where [EtatEnvoiHistoryEntry].[EnvoiId] = @envoi_id_origine
 order by [EtatEnvoiHistoryEntry].[DateTime] desc
-*/
 
 rollback transaction;
