@@ -17,14 +17,15 @@ with [envoi_history] as (
     END as [EtatEnvoi]
     ,[EtatEnvoiHistoryEntry].[DateTime]
   from [dbo].[EtatEnvoiHistoryEntry]),
-[nb_heures_entre_creation_et_envoi] as (
+[envoi_delai] as (
   select [etat_creation].[EnvoiId]
-  ,DATEDIFF(hour, [etat_creation].[DateTime], [etat_envoi].[DateTime]) as [nb heures entre creation et envoi]
+  ,DATEDIFF(hour, [etat_creation].[DateTime], [etat_envoi].[DateTime]) as [nb_heures_entre_creation_et_envoi]
   from [envoi_history] as [etat_creation]
   join [envoi_history] as [etat_envoi]
   on [etat_creation].[EnvoiId] = [etat_envoi].[EnvoiId]
   where [etat_creation].[EtatEnvoi] = 'EN_COURS_DE_TRAITEMENT'
   and [etat_envoi].[EtatEnvoi] = 'ENVOYE'
 )
-select AVG([nb heures entre creation et envoi]) AS 'délai d''envoi moyen en heures'
-from [nb_heures_entre_creation_et_envoi]
+select round(STDEV([nb_heures_entre_creation_et_envoi]), 1) AS [écart type de délai en heures]
+,AVG([nb_heures_entre_creation_et_envoi]) AS [moyenne de délai en heures]
+from [envoi_delai]
