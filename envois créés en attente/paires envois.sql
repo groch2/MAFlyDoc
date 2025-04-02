@@ -1,16 +1,16 @@
 SET NOCOUNT ON
 
-DROP TABLE IF EXISTS #envoi_id_origin_surrogate
+DROP TABLE IF EXISTS #envoi_id_origin_target
 
-CREATE TABLE #envoi_id_origin_surrogate (
-    Envoi_origin_id INT NOT NULL,
-    Envoi_surrogate_id INT NOT NULL,
+CREATE TABLE #envoi_id_origin_target (
+    Envoi_id_origin INT NOT NULL,
+    Envoi_id_target INT NOT NULL,
 );
-ALTER TABLE #envoi_id_origin_surrogate
+ALTER TABLE #envoi_id_origin_target
 ADD CONSTRAINT composite_PK 
-PRIMARY KEY (Envoi_origin_id, Envoi_surrogate_id)
+PRIMARY KEY (Envoi_id_origin, Envoi_id_target)
 
-insert into #envoi_id_origin_surrogate values
+insert into #envoi_id_origin_target values
 (39440, 39820),
 (39440, 39824),
 (39441, 39818),
@@ -201,41 +201,41 @@ insert into #envoi_id_origin_surrogate values
 (39674, 39990),
 (39675, 39963)
 
-DECLARE @Envoi_id_origine int;
+DECLARE @Envoi_id_origin int;
 DECLARE @Envoi_id_target int;
 
 SELECT TOP(1)
-  @Envoi_id_origine = Envoi_origin_id,
-  @Envoi_id_target = Envoi_surrogate_id
-FROM #envoi_id_origin_surrogate
+  @Envoi_id_origin = Envoi_id_origin,
+  @Envoi_id_target = Envoi_id_target
+FROM #envoi_id_origin_target
 
 WHILE @@ROWCOUNT <> 0
 BEGIN
   UPDATE [dbo].[Envoi]
   SET [LastEtatEnvoiHistoryEntryId] = NULL
   ,[EtatFinalErrorMessage] = NULL
-  WHERE [EnvoiId] = @Envoi_id_origine
+  WHERE [EnvoiId] = @Envoi_id_origin
 
   delete [dbo].[EtatEnvoiHistoryEntry]
-  where [EtatEnvoiHistoryEntry].[EnvoiId] = @Envoi_id_origine
+  where [EtatEnvoiHistoryEntry].[EnvoiId] = @Envoi_id_origin
 
   insert into [dbo].[EtatEnvoiHistoryEntry] ([EnvoiId], [EtatEnvoiId], [DateTime])
-  select @Envoi_id_origine, [EtatEnvoiId], [DateTime]
+  select @Envoi_id_origin, [EtatEnvoiId], [DateTime]
   from [dbo].[EtatEnvoiHistoryEntry]
   where [EtatEnvoiHistoryEntry].[EnvoiId] = @Envoi_id_target
 
   UPDATE [dbo].[Envoi]
   SET [LastEtatEnvoiHistoryEntryId] = IDENT_CURRENT('[dbo].[EtatEnvoiHistoryEntry]')
-  WHERE [EnvoiId] = @Envoi_id_origine
+  WHERE [EnvoiId] = @Envoi_id_origin
 
-  DELETE FROM #envoi_id_origin_surrogate
-  WHERE Envoi_origin_id = @Envoi_id_origine
-  and Envoi_surrogate_id = @Envoi_id_target
+  DELETE FROM #envoi_id_origin_target
+  WHERE Envoi_id_origin = @Envoi_id_origin
+  and Envoi_id_target = @Envoi_id_target
 
   SELECT TOP(1)
-    @Envoi_id_origine = Envoi_origin_id,
-    @Envoi_id_target = Envoi_surrogate_id
-  FROM #envoi_id_origin_surrogate
+    @Envoi_id_origin = Envoi_id_origin,
+    @Envoi_id_target = Envoi_id_target
+  FROM #envoi_id_origin_target
 END
 
-DROP TABLE #envoi_id_origin_surrogate;
+DROP TABLE #envoi_id_origin_target;
