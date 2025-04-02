@@ -1,3 +1,5 @@
+USE MAFlyDoc;
+
 SET NOCOUNT ON
 
 DROP TABLE IF EXISTS #envoi_id_origin_target
