@@ -211,10 +211,22 @@ FROM #envoi_id_origin_surrogate
 
 WHILE @@ROWCOUNT <> 0
 BEGIN
-  SELECT *
-  FROM #envoi_id_origin_surrogate
-  WHERE Envoi_origin_id = @Envoi_origin_id
-  and Envoi_surrogate_id = @Envoi_surrogate_id
+  UPDATE [dbo].[Envoi]
+  SET [LastEtatEnvoiHistoryEntryId] = NULL
+  ,[EtatFinalErrorMessage] = NULL
+  WHERE [EnvoiId] = @Envoi_id_origine
+
+  delete [dbo].[EtatEnvoiHistoryEntry]
+  where [EtatEnvoiHistoryEntry].[EnvoiId] = @Envoi_id_origine
+
+  insert into [dbo].[EtatEnvoiHistoryEntry] ([EnvoiId], [EtatEnvoiId], [DateTime])
+  select @Envoi_id_origine, [EtatEnvoiId], [DateTime]
+  from [dbo].[EtatEnvoiHistoryEntry]
+  where [EtatEnvoiHistoryEntry].[EnvoiId] = @Envoi_id_target
+
+  UPDATE [dbo].[Envoi]
+  SET [LastEtatEnvoiHistoryEntryId] = IDENT_CURRENT('[dbo].[EtatEnvoiHistoryEntry]')
+  WHERE [EnvoiId] = @Envoi_id_origine
 
   DELETE FROM #envoi_id_origin_surrogate
   WHERE Envoi_origin_id = @Envoi_origin_id
