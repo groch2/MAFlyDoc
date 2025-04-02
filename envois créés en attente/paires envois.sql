@@ -1,12 +1,16 @@
-DROP TABLE IF EXISTS dbo.envoi_id_origin_surrogate
-CREATE TABLE dbo.envoi_id_origin_surrogate (
+SET NOCOUNT ON
+
+DROP TABLE IF EXISTS #envoi_id_origin_surrogate
+
+CREATE TABLE #envoi_id_origin_surrogate (
     Envoi_origin_id INT NOT NULL,
     Envoi_surrogate_id INT NOT NULL,
-) WITH (MEMORY_OPTIMIZED = OFF, DURABILITY = SCHEMA_AND_DATA);
-ALTER TABLE dbo.envoi_id_origin_surrogate
+);
+ALTER TABLE #envoi_id_origin_surrogate
 ADD CONSTRAINT composite_PK 
 PRIMARY KEY (Envoi_origin_id, Envoi_surrogate_id)
-insert into dbo.envoi_id_origin_surrogate values
+
+insert into #envoi_id_origin_surrogate values
 (39440, 39820),
 (39440, 39824),
 (39441, 39818),
@@ -196,5 +200,30 @@ insert into dbo.envoi_id_origin_surrogate values
 (39673, 39992),
 (39674, 39990),
 (39675, 39963)
-select * from dbo.envoi_id_origin_surrogate
-DROP TABLE dbo.envoi_id_origin_surrogate;
+
+DECLARE @Envoi_origin_id int
+DECLARE @Envoi_surrogate_id int
+
+SELECT TOP(1)
+  @Envoi_origin_id = Envoi_origin_id,
+  @Envoi_surrogate_id = Envoi_surrogate_id
+FROM #envoi_id_origin_surrogate
+
+WHILE @@ROWCOUNT <> 0
+BEGIN
+  SELECT *
+  FROM #envoi_id_origin_surrogate
+  WHERE Envoi_origin_id = @Envoi_origin_id
+  and Envoi_surrogate_id = @Envoi_surrogate_id
+
+  DELETE FROM #envoi_id_origin_surrogate
+  WHERE Envoi_origin_id = @Envoi_origin_id
+  and Envoi_surrogate_id = @Envoi_surrogate_id
+
+  SELECT TOP(1)
+    @Envoi_origin_id = Envoi_origin_id,
+    @Envoi_surrogate_id = Envoi_surrogate_id
+  FROM #envoi_id_origin_surrogate
+END
+
+DROP TABLE #envoi_id_origin_surrogate;
