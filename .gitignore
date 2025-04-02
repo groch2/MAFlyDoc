@@ -11,6 +11,7 @@ Web_API_Client/MAFlyDocApiClient.g.cs
 **/*.pdf
 **/*.png
 **/*.jpg
+**/*.xlsx
 envoi_id_list.txt
 envois-id-list-AR-INT.txt
 envoi_id_list.txt

@@ -13,7 +13,7 @@ var dbContextOptions =
 	new DbContextOptionsBuilder<EnvoiCourrierDbContext>()
 		.EnableSensitiveDataLogging()
 		.UseSqlServer(
-			"Server=(local);Database=MAFlyDoc;Trusted_Connection=True;",
+			"Server=bdd-MAFlyDoc.int.maf.local;Database=MAFlyDoc;Trusted_Connection=True;",
 			providerOptions => providerOptions.CommandTimeout(3))
 	    .Options;
 var context = new EnvoiCourrierDbContext(dbContextOptions);
@@ -47,8 +47,9 @@ File
 		        PersonneId = 0,
 		    },
 		    MainDocumentGedId = "20250121091615772173743005",
-		    MailPostageId = MailPostage.ENVOI_AR,
+		    MailPostageId = MailPostage.ENVOI_SIMPLE,
 		    NbRetriesLeft = 0,
+			Subject = "7D74686C3BB8434FB786269DF00B3D91",
 		};
 		var envoiInitialisationHistoryEntry =
 			new MAFlyDoc.WebApi.Database.Model.EtatEnvoiHistoryEntry {
