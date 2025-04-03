@@ -31,7 +31,7 @@ with [envoi_history] as (
   ,[nb_heures_entre_creation_et_envoi]
   from [envoi_delai])
 SELECT [quartile]
-,count(*) as [nb envois in quartile]
-,MAX([nb_heures_entre_creation_et_envoi]) [delai max quartile en heures]
+,count(*) as [nb envois du quartile]
+,MAX([nb_heures_entre_creation_et_envoi]) [délai max du quartile en heures]
 FROM [delai_by_quartile]
 GROUP BY [quartile]
