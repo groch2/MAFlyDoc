@@ -239,6 +239,20 @@ BEGIN
   and Envoi_id_target = @Envoi_id_target
   -- FIN
 
+  -- remplacer le transportId de envoi_origin par celui de envoi_target
+  -- DÉBUT
+  UPDATE [dbo].[Envoi]
+  SET [TransportId] = (
+    select [TransportId]
+    from [dbo].[Envoi]
+    where [EnvoiId] = @Envoi_id_target)
+  WHERE [EnvoiId] = @Envoi_id_origin
+
+  DELETE FROM #envoi_id_origin_target
+  WHERE Envoi_id_origin = @Envoi_id_origin
+  and Envoi_id_target = @Envoi_id_target
+  -- FIN
+
   SELECT TOP(1)
     @Envoi_id_origin = Envoi_id_origin,
     @Envoi_id_target = Envoi_id_target

@@ -9,11 +9,12 @@
   <Namespace>System.Text.Json.Serialization</Namespace>
 </Query>
 
+const string ENVIRONMENT_CODE = "int";
 var dbContextOptions =
 	new DbContextOptionsBuilder<EnvoiCourrierDbContext>()
 		.EnableSensitiveDataLogging()
 		.UseSqlServer(
-			"Server=bdd-MAFlyDoc.int.maf.local;Database=MAFlyDoc;Trusted_Connection=True;",
+			$"Server=bdd-MAFlyDoc.{ENVIRONMENT_CODE}.maf.local;Database=MAFlyDoc;Trusted_Connection=True;",
 			providerOptions => providerOptions.CommandTimeout(3))
 	    .Options;
 var context = new EnvoiCourrierDbContext(dbContextOptions);
