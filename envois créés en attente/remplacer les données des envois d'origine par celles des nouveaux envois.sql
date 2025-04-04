@@ -215,7 +215,7 @@ FROM #envoi_id_origin_target
 
 WHILE @@ROWCOUNT <> 0
 BEGIN
-  -- remplacer les données de envoi_origin par celles de envoi_target
+  -- remplacer les données d'historique de envoi_origin par celles de envoi_target
   -- DÉBUT
   UPDATE [dbo].[Envoi]
   SET [LastEtatEnvoiHistoryEntryId] = NULL
