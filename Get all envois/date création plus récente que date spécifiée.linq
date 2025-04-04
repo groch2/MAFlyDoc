@@ -14,9 +14,9 @@
   <IncludeLinqToSql>true</IncludeLinqToSql>
 </Query>
 
-const string environment = "j1d";
+const string ENVIRONMENT_CODE = "j1d";
 async Task Main() {
-	var settings = JsonDocument.Parse(File.ReadAllText(@$"C:\Users\deschaseauxr\Documents\MAFlyDoc\Get all envois\settings_{environment}.json")).RootElement;
+	var settings = JsonDocument.Parse(File.ReadAllText(@$"C:\Users\deschaseauxr\Documents\MAFlyDoc\Get all envois\settings_{ENVIRONMENT_CODE}.json")).RootElement;
 	var sqlServer = settings.GetProperty("sqlServer").GetString();
 	var webApiAddress = settings.GetProperty("webApiAddress").GetString();
 	var dbContextOptions =
@@ -54,6 +54,17 @@ async Task Main() {
 						.Select(item =>
 							JsonSerializer.Deserialize<EnvoiQueryResult>(item, jsonSerializerOptions));
 				}))).SelectMany(envois => envois);
+	var envois_with_main_document_ged_id =
+		envois.Select(envoi => new { envoi.EnvoiId, envoi.MainDocumentGedId })
+			.DistinctBy(envoi_document => envoi_document.MainDocumentGedId)
+			.ToArray();
+	var documentsByDocumentId =
+		(await GetDocumentsByDocumentsIdList(envois_with_main_document_ged_id.Select(envoi => envoi.MainDocumentGedId)))
+			.ToDictionary(
+				doc => doc[DocProperty.DocumentId],
+				doc => doc[DocProperty.NumeroSinistre]);
+	//envois_with_main_document_ged_id.ToDictionary(envoi => envoi.EnvoiId,
+	//	envoi => documentsByDocumentId[envoi.MainDocumentGedId]);
 	envois
 		//.Select(
 		//	envoi => new {
@@ -88,9 +99,26 @@ async Task Main() {
 					état_actuel = envoi.LastEtatEnvoiHistoryEntry.Etat,
 					état_actuel_date = FormatDate(envoi.LastEtatEnvoiHistoryEntry.DateTime),
 					message_si_envoi_echoué = envoi.EtatFinalErrorMessage,
+					numéro_sinistre = documentsByDocumentId[envoi.MainDocumentGedId]
 					//envoi.TransportId,
 					//envoi.DocumentsArTelechargesGedId,
 				};
+			})
+		.Where(envoiItem =>
+			envoiItem.état_actuel switch {
+				//EtatEnvoiEnum.EN_COURS_D_ENVOI or
+				//EtatEnvoiEnum.EN_COURS_DE_TRAITEMENT or
+				//EtatEnvoiEnum.ENVOYE or
+				//EtatEnvoiEnum.NON_DISTRIBUE or
+				//EtatEnvoiEnum.REMIS_AU_DESTINATAIRE or
+				EtatEnvoiEnum.TRAITEMENT_ECHOUE or
+				EtatEnvoiEnum.TRAITEMENT_ANNULE or
+				EtatEnvoiEnum.TRAITEMENT_REJETE or
+				EtatEnvoiEnum.ENVOI_ABANDONNE or
+				EtatEnvoiEnum.ABANDONNE_PAR_LA_MAF => true,
+				//EtatEnvoiEnum.AR_RECU_PAR_LA_MAF or
+				//EtatEnvoiEnum.PND_RECU_PAR_LA_MAF => true,
+				_ => false
 			})
 		.Dump();
 }
@@ -140,5 +168,104 @@ static IEnumerable<int[]> GroupIntegersByMaxNbDigitsInGroups(
 		if (group.Any()) {
 			yield return group.ToArray();
 		}
+	}
+}
+
+static readonly HttpClient mafGedHttpClient = new HttpClient { BaseAddress = new Uri($"https://api-ged-intra.{ENVIRONMENT_CODE}.maf.local/v2/Documents/") };
+static async Task<IEnumerable<Dictionary<DocProperty, object>>> GetDocumentsByDocumentsIdList(IEnumerable<string> documentsIdList) {
+	var nbDocumentsIdInEachGroup = GetNbDocumentsIdInEachGroup();
+	const char separator = ',';
+	var documents =
+		(await Task.WhenAll(
+	        documentsIdList
+	        .Chunk(nbDocumentsIdInEachGroup)
+	        .Select(async documentsIdList => {
+	            var commaSeparatedDocumentsIdList = string.Join(separator, documentsIdList.Select(documentId => $"'{documentId}'"));
+				//var queryString = $"?$filter=documentId in ({commaSeparatedDocumentsIdList})&$select=assigneRedacteur,assureurId,canalPrincipal,categoriesCote,categoriesFamille,categoriesTypeDocument,chantierId,codeOrigine,commentaire,compteId,dateDocument,dateNumerisation,deposeLe,deposePar,docn,documentId,extension,fichierNom,fichierNombrePages,fichierTaille,heureNumerisation,horodatage,important,libelle,modifieLe,modifiePar,numeroGc,numeroSinistre,periodeValiditeDebut,periodeValiditeFin,personneId,presenceAr,previewLink,qualiteValideeLe,qualiteValideePar,qualiteValideeValide,regroupementId,sens,sousDossierSinistre,statut,traiteLe,traitePar,typeGarantie,vuLe,vuPar";
+				var queryString = $"?$filter=documentId in ({commaSeparatedDocumentsIdList})&$select=documentId,numeroSinistre,libelle";
+				//Environment.Exit(0);
+				//documentsIdList.Dump();
+	            var responseContent = await mafGedHttpClient.GetStringAsync(queryString);
+				return JsonDocument
+					.Parse(responseContent)
+					.RootElement
+					.GetProperty("value")
+					.EnumerateArray()
+					.Select(jsonElement => JsonNode.Parse(jsonElement.ToString()))
+					.Select(jsonNode =>
+						new Dictionary<DocProperty, object> {
+							//{ DocProperty.AssigneRedacteur, jsonNode["assigneRedacteur"]?.ToString() },
+							{ DocProperty.DocumentId, jsonNode["documentId"]?.ToString() },
+							{ DocProperty.Libelle, jsonNode["libelle"]?.ToString() },
+							//{ DocProperty.Commentaire, jsonNode["commentaire"]?.ToString() },
+							//{ DocProperty.TypeGarantie, jsonNode["typeGarantie"]?.ToString() },
+							//{ DocProperty.FichierNom, jsonNode["fichierNom"]?.ToString() },
+							//{ DocProperty.Famille, jsonNode["categoriesFamille"]?.ToString() },
+							//{ DocProperty.Côte, jsonNode["categoriesCote"]?.ToString() },
+							//{ DocProperty.TypeDocument, jsonNode["categoriesTypeDocument"]?.ToString() },
+							//{ DocProperty.DeposeLe, GetDateOnly(jsonNode["deposeLe"]?.GetValue<DateTime>()) },
+							//{ DocProperty.DeposePar, jsonNode["deposePar"]?.ToString() },
+							//{ DocProperty.VuLe, GetDateOnly(jsonNode["vuLe"]?.GetValue<DateTime>()) },
+							//{ DocProperty.VuPar, jsonNode["vuPar"]?.ToString() },
+							//{ DocProperty.QualiteValideeLe, GetDateOnly(jsonNode["qualiteValideeLe"]?.GetValue<DateTime>()) },
+							//{ DocProperty.QualiteValideePar, jsonNode["qualiteValideePar"]?.ToString() },
+							//{ DocProperty.QualiteValideeValide, jsonNode["qualiteValideeValide"]?.ToString() },
+							//{ DocProperty.TraiteLe, GetDateOnly(jsonNode["traiteLe"]?.GetValue<DateTime>()) },
+							//{ DocProperty.TraitePar, jsonNode["traitePar"]?.ToString() },
+							//{ DocProperty.ModifieLe, GetDateOnly(jsonNode["modifieLe"]?.GetValue<DateTime>()) },
+							//{ DocProperty.ModifiePar, jsonNode["modifiePar"]?.ToString() },
+							//{ DocProperty.NumeroContrat, jsonNode["numeroContrat"]?.ToString() },
+							{ DocProperty.NumeroSinistre, jsonNode["numeroSinistre"]?.ToString() },
+							//{ DocProperty.ChantierId, jsonNode["chantierId"]?.ToString() },
+							//{ DocProperty.AssureurId, jsonNode["assureurId"]?.ToString() },
+							//{ DocProperty.CompteId, jsonNode["compteId"]?.ToString() },
+							//{ DocProperty.PersonneId, jsonNode["personneId"]?.ToString() },
+							//{ DocProperty.Sens, jsonNode["sens"]?.ToString() },
+							//{ DocProperty.SousDossierSinistre, jsonNode["sousDossierSinistre"]?.ToString() },
+							//{ DocProperty.Important, jsonNode["important"]?.ToString() },
+							//{ DocProperty.PeriodeValiditeDebut, GetDateOnly(jsonNode["periodeValiditeDebut"]?.GetValue<DateTime>()) },
+							//{ DocProperty.PeriodeValiditeFin, GetDateOnly(jsonNode["periodeValiditeFin"]?.GetValue<DateTime>()) },
+							//{ DocProperty.Statut, jsonNode["statut"]?.ToString() }
+						});
+			        })))
+				.SelectMany(documents => documents);
+	return documents;
+	
+	int GetNbDocumentsIdInEachGroup() {
+		const int requestUrlAndQueryLengthLimit = 2048;
+		var baseUrlLength = mafGedHttpClient.BaseAddress.AbsoluteUri.Length;
+		const byte separatorLength = 1; // ","
+		const int documentIdLength = 26; // "20241027021216767823360255".Length
+		var nbDocumentsIdInEachGroup =
+		    (requestUrlAndQueryLengthLimit - baseUrlLength) / (documentIdLength + separatorLength + 2);
+		return nbDocumentsIdInEachGroup;
+	}
+	
+	DateOnly? GetDateOnly(DateTime? dateTime) =>
+		dateTime.HasValue ? DateOnly.FromDateTime(dateTime.Value) : null;
+}
+
+enum DocProperty { AssigneRedacteur, AssureurId, ChantierId, Commentaire, CompteId, Côte, DeposeLe, DeposePar, DocumentId, Famille, FichierNom, Important, Libelle, ModifieLe, ModifiePar, NumeroContrat, NumeroSinistre, PeriodeValiditeDebut, PeriodeValiditeFin, PersonneId, QualiteValideeLe, QualiteValideePar, QualiteValideeValide, Sens, SousDossierSinistre, Statut, TraiteLe, TraitePar, TypeDocument, TypeGarantie, VuLe, VuPar }
+
+static async IAsyncEnumerable<U> SelectManyAsync<T, U>(
+	IEnumerable<IEnumerable<T>> sourceItemsPages,
+	Func<IEnumerable<T>, Task<IEnumerable<U>>> func) {
+	foreach (var page in sourceItemsPages) {
+		var resultItems = await func(page);
+		foreach (var resultItem in resultItems) {
+			yield return resultItem;
+		}
+	}
+}
+
+static IEnumerable<IEnumerable<T>> GetItemsByPages<T>(IEnumerable<T> itemsSource, int pageSize) {
+	var nbItemsTotal = itemsSource.Count();
+	var skip = 0;
+	while (skip + pageSize <= nbItemsTotal) {
+		yield return itemsSource.Skip(skip).Take(pageSize);
+		skip += pageSize;
+	}
+	if (skip < nbItemsTotal) {
+		yield return itemsSource.Skip(skip).Take(pageSize);
 	}
 }
