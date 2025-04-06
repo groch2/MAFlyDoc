@@ -1,0 +1,34 @@
+SELECT [EnvoiId], [AttachementGedId]
+FROM [dbo].[Attachement]
+WHERE [EnvoiId] in
+(__ENVOIS_ID_LIST__);
+
+select
+ [Envoi].[EnvoiId]
+,[Envoi].[Application]
+,[Envoi].[Impression]
+,[Envoi].[MailPostageId]
+,[Envoi].[MainDocumentGedId]
+,[Envoi].[PageAdresse]
+,[Envoi].[ReferenceAR]
+,[Envoi].[Subject]
+
+,[Sender].[CompanyName]
+,[Sender].[PersonFirstName]
+,[Sender].[PersonLastName]
+,[Sender].[SenderId]
+,[Sender].[UserId]
+
+,[Recipient].[AdresseAfnor]
+,[Recipient].[AdresseId]
+,[Recipient].[CompteId]
+,[Recipient].[PersonneId]
+,[Recipient].[RecipientId]
+
+from [dbo].[Envoi]
+join [dbo].[Sender]
+  on [Envoi].[SenderId] = [Sender].[SenderId]
+join [dbo].[Recipient]
+  on [Envoi].[RecipientId] = [Recipient].[RecipientId]
+where [Envoi].[EnvoiId] in
+(__ENVOIS_ID_LIST__);
