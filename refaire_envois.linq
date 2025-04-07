@@ -15,7 +15,6 @@ async Task Main() {
 	var envoisIdList =
 		File.ReadAllLines(@"C:\Users\deschaseauxr\Documents\MAFlyDoc\envois créés en attente\envois_id_d_origine.txt")
 			.Select(int.Parse)
-			.Take(1)
 			.ToArray();
 	var envois_data_list = GetEnvois(envoisIdList);
 	var envois_list =
@@ -34,20 +33,28 @@ async Task Main() {
 						compteId = envoi.Recipient.CompteId,
 						personneId = envoi.Recipient.PersonneId,
 						adresseId = envoi.Recipient.AdresseId
-					},					
+					},
 					AdresseDuDestinataireLignes = envoi.Recipient.AdresseAfnor.Split("\n"),
 		            mainDocumentGedId = envoi.MainDocumentGedId,
 		            attachementsGedIdList = (object)null,
-		            mailPostage = envoi.MailPostageId switch { 0 => "ENVOI_PRIORITAIRE", 1 => "ENVOI_SIMPLE", 2 => "ENVOI_AR", _ => throw new Exception("affranchissement inconnu") },
-					pageAdresse = envoi.PageAdresse ? "AVEC" : "SANS",
-					impression = envoi.Impression switch { 0 => "RECTO_VERSO", 1 => "RECTO", _ => throw new Exception("paramètre d'impression inconnu") },
+		            mailPostage =
+						envoi.MailPostageId switch {
+							0 => MailPostage.ENVOI_PRIORITAIRE,
+							1 => MailPostage.ENVOI_SIMPLE,
+							2 => MailPostage.ENVOI_AR,
+							_ => throw new Exception("affranchissement inconnu")
+						},
+					pageAdresse = envoi.PageAdresse.ToString(),
+					impression = envoi.Impression.ToString(),
 					referenceAR = envoi.ReferenceAR,
 		        });
+	envois_list.Dump();
+	return;
 	var creations_envois_commands =
 		await Task.WhenAll(
 			envois_list.Select(async envoi => {
 				try {
-					var new_envoi_id = 
+					var new_envoi_id =
 						envoi.recipient.compteId == null && envoi.recipient.adresseId == null ?
 						await CreateEnvoiFromPlainAddressText(envoi) :
 						await CreateEnvoiFromRecipientAddressId(envoi);
@@ -85,7 +92,7 @@ IEnumerable<EnvoiFromDatabase> GetEnvois(IEnumerable<int> envoisIdList) {
         var envoiId = reader.GetInt32(0);
         var attachementGedId = reader.GetString(1);
 		if (!attachementsByEnvoiId.ContainsKey(envoiId)) {
-			attachementsByEnvoiId[envoiId] = new List<string>{ attachementGedId }; 
+			attachementsByEnvoiId[envoiId] = new List<string>{ attachementGedId };
 		} else {
 			attachementsByEnvoiId[envoiId].Add(attachementGedId);
 		}
@@ -96,10 +103,10 @@ IEnumerable<EnvoiFromDatabase> GetEnvois(IEnumerable<int> envoisIdList) {
         yield return new EnvoiFromDatabase(
             EnvoiId: envoiId,
             Application: reader.IsDBNull(1) ? null : reader.GetString(1),
-            Impression: reader.GetInt32(2),
+            Impression: reader.IsDBNull(2) ? Impression.RECTO_VERSO : (Impression)reader.GetInt32(2),
             MailPostageId: reader.GetInt32(3),
             MainDocumentGedId: reader.GetString(4),
-            PageAdresse: reader.GetBoolean(5),
+            PageAdresse: reader.IsDBNull(5) ? PageAdresse.SANS : (reader.GetBoolean(5) ? PageAdresse.AVEC : PageAdresse.SANS),
             ReferenceAR: reader.IsDBNull(6) ? null : reader.GetString(6),
             Subject: reader.IsDBNull(7) ? null : reader.GetString(7),
             Sender: new Sender(
@@ -119,30 +126,30 @@ IEnumerable<EnvoiFromDatabase> GetEnvois(IEnumerable<int> envoisIdList) {
     }
 }
 
-record EnvoiFromDatabase
-(int EnvoiId
-,string Application
-,int Impression
-,int MailPostageId
-,string MainDocumentGedId
-,bool PageAdresse
-,string ReferenceAR
-,string Subject
-,Sender Sender
-,Recipient Recipient
-,string[] AttachementsGedIdList);
+record EnvoiFromDatabase(
+	int EnvoiId,
+	string Application,
+	Impression Impression,
+	int MailPostageId,
+	string MainDocumentGedId,
+	PageAdresse PageAdresse,
+	string ReferenceAR,
+	string Subject,
+	Sender Sender,
+	Recipient Recipient,
+	string[] AttachementsGedIdList);
 
-record Recipient
-(string AdresseAfnor
-,int? AdresseId
-,int? CompteId
-,int? PersonneId);
+record Recipient(
+	string AdresseAfnor,
+	int? AdresseId,
+	int? CompteId,
+	int? PersonneId);
 
-record Sender
-(string CompanyName
-,string PersonFirstName
-,string PersonLastName
-,string UserId);
+record Sender(
+	string CompanyName,
+	string PersonFirstName,
+	string PersonLastName,
+	string UserId);
 
 record EnvoiAttachement(int envoiId, string attachementGedId);
 
@@ -169,7 +176,7 @@ static async Task<int> CreateEnvoiFromPlainAddressText(dynamic envoi) {
 		responseContent.Dump();
 		httpResponse.Dump();
 		throw;
-	}	
+	}
 	var envoiId = int.Parse(httpResponse.Headers.Location!.Segments[^1]);
 	return envoiId;
 }
@@ -201,7 +208,7 @@ static async Task<int> CreateEnvoiFromRecipientAddressId(dynamic envoi) {
 		responseContent.Dump();
 		httpResponse.Dump();
 		throw;
-	}	
+	}
 	var envoiId = int.Parse(httpResponse.Headers.Location!.Segments[^1]);
 	return envoiId;
 }
