@@ -5,6 +5,7 @@
   <Namespace>MAFlyDoc.WebApi.Model</Namespace>
   <Namespace>Microsoft.EntityFrameworkCore</Namespace>
   <Namespace>System.Data.SqlClient</Namespace>
+  <Namespace>System.Globalization</Namespace>
   <Namespace>System.Net.Http</Namespace>
   <Namespace>System.Text.Json</Namespace>
   <Namespace>System.Text.Json.Nodes</Namespace>
@@ -13,9 +14,10 @@
   <IncludeLinqToSql>true</IncludeLinqToSql>
 </Query>
 
-const string ENVIRONMENT_CODE = "int";
+const string ENVIRONMENT_CODE = "j1d";
 const string sqlServer = $"bdd-MAFlyDoc.{ENVIRONMENT_CODE}.maf.local";
 const string webApiAddress = $"https://api-maflydoc-intra.{ENVIRONMENT_CODE}.maf.local";
+static readonly DateTimeFormatInfo dateTimeFormat = CultureInfo.GetCultureInfo("FR-fr").DateTimeFormat;
 async Task Main() {
 	var dbContextOptions =
 		new DbContextOptionsBuilder<EnvoiCourrierDbContext>()
@@ -25,14 +27,15 @@ async Task Main() {
 				providerOptions => providerOptions.CommandTimeout(1))
 		    .Options;
 	using var context = new EnvoiCourrierDbContext(dbContextOptions);
+	var minDateCreation = DateTimeOffset.ParseExact(input: "25-03-2025 17:25 +01", format: "dd-MM-yyyy HH:mm zz", dateTimeFormat);
+	//minDateCreation.Dump(); return;
 	var envoisIdsList =
 		context
 			.Set<MAFlyDoc.WebApi.Database.Model.Envoi>()
-			//.Include(envoi => envoi.LastEtatEnvoiHistoryEntry)
-			//.OrderBy(envoi => envoi.LastEtatEnvoiHistoryEntry.DateTime)
 			//.Take(3)
-			//.Where(envoi => envoi.LastEtatEnvoiHistoryEntry.DateTime > DateTimeOffset.Parse("01/07/2024"))
-			.Select(envoi => envoi.EnvoiId);
+			.Select(envoi => new { envoi, creationDate = envoi.EtatsEnvoiHistory.Select(etat => etat.DateTime).Min() })
+			.Where(envoiItem => envoiItem.creationDate > minDateCreation)
+			.Select(envoiItem => envoiItem.envoi.EnvoiId);
 	//envoisIdsList = new int[] { 1, 2, 3 }.AsQueryable();
 	const bool withEtatEnvoiHistory = true;
 	(await Task.WhenAll(
@@ -54,14 +57,14 @@ async Task Main() {
 			(envoi, index) => new {
 				index = index + 1,
 				envoi.EnvoiId,
-				Etat = envoi.LastEtatEnvoiHistoryEntry.Etat,
-				Etat_date =
-					DateOnly.FromDateTime(envoi.LastEtatEnvoiHistoryEntry.DateTime.Date),
-				Creation_date =
-					DateOnly.FromDateTime(envoi.EtatsEnvoiHistoryEntriesList.Last().DateTime.Date),
-				envoi.MailPostage,
-				envoi.TransportId,
-				envoi.DocumentsArTelechargesGedId,
+				date_creation =
+					FormatDateTimeOffset(envoi.EtatsEnvoiHistoryEntriesList.Last().DateTime),
+				etat_actuel = envoi.LastEtatEnvoiHistoryEntry.Etat,
+				date_etat_actuel =
+					FormatDateTimeOffset(envoi.LastEtatEnvoiHistoryEntry.DateTime),
+				affranchissement = envoi.MailPostage,
+				sujet = envoi.Subject,
+				raison_si_echec = envoi.EtatFinalErrorMessage
 			})
 		.Dump();
 }
@@ -85,18 +88,15 @@ static IEnumerable<int[]> GroupIntegersByMaxNbDigitsInGroups(
 		Func<U> resetState) {
 		var group = new List<T>();
 		var state = resetState();
-		var groupSize = 0;
 		foreach (var item in items) {
 			state = getNextState(state, item);
 			if (!statePredicate(state)) {
 				yield return group.ToArray();
 				group = new List<T>{ item };
-				groupSize = 1;
 				state = resetState();
 				state = getNextState(state, item);
 			} else {
 				group.Add(item);
-				groupSize++;
 			}
 		}
 		if (group.Any()) {
@@ -115,3 +115,9 @@ static JsonSerializerOptions jsonSerializerOptions =
 		PropertyNameCaseInsensitive = true,
 		Converters = { new JsonStringEnumConverter() }
 	};
+
+static string FormatDateTimeOffset(DateTimeOffset dateTime) =>
+	dateTime.ToString("ddd dd/MM/yyyy HH:mm:ss zz\\h");
+
+DateOnly ToDateOnly(DateTimeOffset dateTime) =>
+	DateOnly.FromDateTime(dateTime.Date);
