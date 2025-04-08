@@ -27,32 +27,41 @@ async Task Main() {
 				providerOptions => providerOptions.CommandTimeout(1))
 		    .Options;
 	using var context = new EnvoiCourrierDbContext(dbContextOptions);
-	var minDateCreation = DateTimeOffset.ParseExact(input: "25-03-2025 17:25 +01", format: "dd-MM-yyyy HH:mm zz", dateTimeFormat);
+	var minDateCreation =
+		DateTimeOffset.ParseExact(
+			input: "25-03-2025 17:25 +01",
+			format: "dd-MM-yyyy HH:mm zz",
+			dateTimeFormat);
 	//minDateCreation.Dump(); return;
-	var envoisIdsList =
+	var envoisList =
 		context
 			.Set<MAFlyDoc.WebApi.Database.Model.Envoi>()
 			//.Take(3)
 			.Select(envoi => new { envoi, creationDate = envoi.EtatsEnvoiHistory.Select(etat => etat.DateTime).Min() })
 			.Where(envoiItem => envoiItem.creationDate > minDateCreation)
-			.Select(envoiItem => envoiItem.envoi.EnvoiId);
-	//envoisIdsList = new int[] { 1, 2, 3 }.AsQueryable();
+			.OrderBy(envoiItem => envoiItem.creationDate);
+			//.Select(envoiItem => envoiItem.envoi.EnvoiId);
+	//envoisList.Select(envoiItem => new { envoiItem.envoi.EnvoiId, envoiItem.creationDate }) .Dump();
+	//return;
 	const bool withEtatEnvoiHistory = true;
 	(await Task.WhenAll(
-		GroupIntegersByMaxNbDigitsInGroups(items: envoisIdsList, maxGroupSize: 1400, groupsSeparatorLength: 1)
-			.Select(envoisIdList => string.Join(',', envoisIdList))
-			.Select(async formattedEnvoisIdsList => {
-				var allEnvois =
-					await httpClient.GetStringAsync($"/v1/Envois/Envois-from-envois-id-list?comma-separated-envois-id-list={formattedEnvoisIdsList}&with-etat-envoi-history={withEtatEnvoiHistory}");
-				return JsonDocument
-					.Parse(allEnvois)
-					.RootElement
-					.EnumerateArray()
-					.Select(item =>
-						JsonSerializer.Deserialize<EnvoiQueryResult>(item, jsonSerializerOptions));
-			})))
+		GroupIntegersByMaxNbDigitsInGroups(
+			items: envoisList.Select(envoiItem => envoiItem.envoi.EnvoiId),
+			maxGroupSize: 1400,
+			groupsSeparatorLength: 1)
+				.Select(async envoisIdList => {
+					var formattedEnvoisIdsList = string.Join(',', envoisIdList);
+					var allEnvois =
+						await httpClient.GetStringAsync($"/v1/Envois/Envois-from-envois-id-list?comma-separated-envois-id-list={formattedEnvoisIdsList}&with-etat-envoi-history={withEtatEnvoiHistory}");
+					return JsonDocument
+						.Parse(allEnvois)
+						.RootElement
+						.EnumerateArray()
+						.Select(item =>
+							JsonSerializer.Deserialize<EnvoiQueryResult>(item, jsonSerializerOptions));
+				})))
 		.SelectMany(envois => envois)
-		.OrderByDescending(envoi => envoi.LastEtatEnvoiHistoryEntry.DateTime)
+		//.OrderByDescending(envoi => envoi.LastEtatEnvoiHistoryEntry.DateTime)
 		.Select(
 			(envoi, index) => new {
 				index = index + 1,
