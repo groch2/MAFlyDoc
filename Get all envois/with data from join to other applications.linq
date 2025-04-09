@@ -14,7 +14,7 @@
   <IncludeLinqToSql>true</IncludeLinqToSql>
 </Query>
 
-const string ENVIRONMENT_CODE = "j1d";
+const string ENVIRONMENT_CODE = "int";
 const string maflyDocSqlServer = $"bdd-MAFlyDoc.{ENVIRONMENT_CODE}.maf.local";
 const string maflyDocWebApiAddress = $"https://api-maflydoc-intra.{ENVIRONMENT_CODE}.maf.local";
 static readonly DateTimeFormatInfo dateTimeFormat = CultureInfo.GetCultureInfo("FR-fr").DateTimeFormat;
@@ -27,20 +27,26 @@ async Task Main() {
 				providerOptions => providerOptions.CommandTimeout(1))
 		    .Options;
 	using var context = new EnvoiCourrierDbContext(dbContextOptions);
-	var minDateCreation = DateTimeOffset.ParseExact(input: "25-03-2025 17:25 +01", format: "dd-MM-yyyy HH:mm zz", dateTimeFormat);
-	//minDateCreation.Dump(); return;
-	var envoisIdsList =
+	var minDateCreation =
+		DateTimeOffset.ParseExact(
+			input: "25-03-2025 17:25 +01",
+			format: "dd-MM-yyyy HH:mm zz",
+			dateTimeFormat);
+	var envoisByEnvoiId =
 		context
 			.Set<MAFlyDoc.WebApi.Database.Model.Envoi>()
-			//.Take(3)
-			.Select(envoi => new { envoi, creationDate = envoi.EtatsEnvoiHistory.Select(etat => etat.DateTime).Min() })
+			.Select(envoi =>
+				new {
+					envoi,
+					creationDate = envoi.EtatsEnvoiHistory.Select(etat => etat.DateTime).Min(),
+					application = envoi.Application,
+				})
 			.Where(envoiItem => envoiItem.creationDate > minDateCreation)
-			.Select(envoiItem => envoiItem.envoi.EnvoiId);
-	//envoisIdsList = new int[] { 1, 2, 3 }.AsQueryable();
+			.ToDictionary(envoiItem => envoiItem.envoi.EnvoiId);
 	const bool withEtatEnvoiHistory = true;
 	var envois =
 		(await Task.WhenAll(
-			GroupIntegersByMaxNbDigitsInGroups(items: envoisIdsList, maxGroupSize: 1400, groupsSeparatorLength: 1)
+			GroupIntegersByMaxNbDigitsInGroups(items: envoisByEnvoiId.Keys, maxGroupSize: 1400, groupsSeparatorLength: 1)
 				.Select(envoisIdList => string.Join(',', envoisIdList))
 				.Select(async formattedEnvoisIdsList => {
 					var allEnvois =
@@ -72,23 +78,21 @@ async Task Main() {
 			.Select(document => $"{document.CodeRedacteur}")
 			.Distinct()
 			.ToArray();
-	//codesUtilisateurList.Dump();
 	var utilisateursByCodeUtilisateur =
 		(await(GetUtilisateursByCodesUtilisateurList(codesUtilisateurList)))
 			.DistinctBy(utilisateur => utilisateur[UtilisateurProperty.CodeUtilisateur])
 			.ToDictionary(utilisateur => utilisateur[UtilisateurProperty.CodeUtilisateur]);
-	//utilisateursByCodeUtilisateur.Dump();
-	//return;
 	envois
 		.Select(
 			(envoi, index) => {
 				var envoi_document = documentDataByDocumentId[envoi.MainDocumentGedId];
 				var main_document_redacteur = utilisateursByCodeUtilisateur.GetValueOrDefault(envoi_document.CodeRedacteur);
+				var envoiFromDatabase = envoisByEnvoiId[envoi.EnvoiId];
 				return new {
 					index = index + 1,
 					envoi.EnvoiId,
 					date_creation =
-						FormatDateTimeOffset(envoi.EtatsEnvoiHistoryEntriesList.Last().DateTime),
+						FormatDateTimeOffset(envoiFromDatabase.creationDate.DateTime),
 					etat_actuel = envoi.LastEtatEnvoiHistoryEntry.Etat,
 					date_etat_actuel =
 						FormatDateTimeOffset(envoi.LastEtatEnvoiHistoryEntry.DateTime),
@@ -102,7 +106,7 @@ async Task Main() {
 					redacteur_login = main_document_redacteur?[UtilisateurProperty.Login],
 					redacteur_email = main_document_redacteur?[UtilisateurProperty.Email],
 					main_doc_libelle = envoi_document.Libelle,
-					//envoi.MainDocumentGedId,
+					application = envoiFromDatabase.application,
 				};
 			})
 		.Dump();
@@ -119,9 +123,6 @@ static async Task<IEnumerable<Dictionary<DocProperty, object>>> GetDocumentsByDo
 		        .Select(async documentsIdList => {
 		            var commaSeparatedDocumentsIdList = string.Join(separator, documentsIdList.Select(documentId => $"'{documentId}'"));
 					var queryString = $"?$filter=documentId in ({commaSeparatedDocumentsIdList})&$select=documentId,libelle,assigneRedacteur,numeroSinistre";
-					//Environment.Exit(0);
-					//new { queryString }.Dump();
-					//new { documentsIdList }.Dump();
 		            var responseMessage = await mafGedHttpClient.GetAsync(queryString);				
 					var responseContent = await responseMessage.Content.ReadAsStringAsync();
 					if (!responseMessage.IsSuccessStatusCode) {
@@ -182,9 +183,6 @@ static async Task<IEnumerable<Dictionary<DocProperty, object>>> GetDocumentsByDo
 		    (requestUrlAndQueryLengthLimit - baseUrlLength) / (documentIdLength + separatorLength + 2);
 		return nbDocumentsIdInEachGroup;
 	}
-	
-	DateOnly? GetDateOnly(DateTime? dateTime) =>
-		dateTime.HasValue ? DateOnly.FromDateTime(dateTime.Value) : null;
 }
 
 enum DocProperty { AssigneRedacteur, AssureurId, ChantierId, Commentaire, CompteId, Côte, DeposeLe, DeposePar, DocumentId, Famille, FichierNom, Important, Libelle, ModifieLe, ModifiePar, NumeroContrat, NumeroSinistre, PeriodeValiditeDebut, PeriodeValiditeFin, PersonneId, QualiteValideeLe, QualiteValideePar, QualiteValideeValide, Sens, SousDossierSinistre, Statut, TraiteLe, TraitePar, TypeDocument, TypeGarantie, VuLe, VuPar }
@@ -276,5 +274,4 @@ static JsonSerializerOptions jsonSerializerOptions =
 static string FormatDateTimeOffset(DateTimeOffset dateTime) =>
 	dateTime.ToString("ddd dd/MM/yyyy HH:mm:ss zz\\h");
 
-DateOnly ToDateOnly(DateTimeOffset dateTime) =>
-	DateOnly.FromDateTime(dateTime.Date);
+DateOnly GetDateOnly(DateTime dateTime) => DateOnly.FromDateTime(dateTime);

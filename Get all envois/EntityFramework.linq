@@ -32,17 +32,12 @@ async Task Main() {
 			input: "25-03-2025 17:25 +01",
 			format: "dd-MM-yyyy HH:mm zz",
 			dateTimeFormat);
-	//minDateCreation.Dump(); return;
 	var envoisList =
 		context
 			.Set<MAFlyDoc.WebApi.Database.Model.Envoi>()
-			//.Take(3)
 			.Select(envoi => new { envoi, creationDate = envoi.EtatsEnvoiHistory.Select(etat => etat.DateTime).Min() })
 			.Where(envoiItem => envoiItem.creationDate > minDateCreation)
 			.OrderBy(envoiItem => envoiItem.creationDate);
-			//.Select(envoiItem => envoiItem.envoi.EnvoiId);
-	//envoisList.Select(envoiItem => new { envoiItem.envoi.EnvoiId, envoiItem.creationDate }) .Dump();
-	//return;
 	const bool withEtatEnvoiHistory = true;
 	(await Task.WhenAll(
 		GroupIntegersByMaxNbDigitsInGroups(
@@ -61,7 +56,6 @@ async Task Main() {
 							JsonSerializer.Deserialize<EnvoiQueryResult>(item, jsonSerializerOptions));
 				})))
 		.SelectMany(envois => envois)
-		//.OrderByDescending(envoi => envoi.LastEtatEnvoiHistoryEntry.DateTime)
 		.Select(
 			(envoi, index) => new {
 				index = index + 1,
