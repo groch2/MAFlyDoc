@@ -51,17 +51,20 @@ select
   -- [Envoi].[MainDocumentGedId],
   -- [Attachement].[AttachementGedId],
   [CTE_envois].[Affranchissement],
-  [CTE_envois].[etat initial],
-  FORMAT([CTE_envois].[date initialisation], 'ddd dd/MM/yyyy HH:mm:ss zz\h', 'fr-FR') as [date initialisation],
+--   [CTE_envois].[etat initial],
+  FORMAT([CTE_envois].[date initialisation], 'dd/MM/yyyy HH:mm:ss zz\h', 'fr-FR') as [date initialisation],
   [CTE_envois].[etat_actuel],
-  FORMAT([CTE_envois].[date_dernier_etat], 'ddd dd/MM/yyyy HH:mm:ss zz\h', 'fr-FR') as [date_dernier_etat],
+  FORMAT([CTE_envois].[date_dernier_etat], 'dd/MM/yyyy HH:mm:ss zz\h', 'fr-FR') as [date_etat_actuel],
   [CTE_envois].[EtatFinalErrorMessage],
-  [Envoi].[Subject]
+  [Envoi].[Subject] [envoi_sujet]
 from [CTE_envois]
 join [dbo].[Envoi]
   on [CTE_envois].[EnvoiId] = [Envoi].[EnvoiId]
 -- left join [dbo].[Attachement]
 --   on [Envoi].[EnvoiId] = [Attachement].[EnvoiId]
-where trim([CTE_envois].[etat_actuel]) = 'TRAITEMENT_ECHOUE'
-  and trim([CTE_envois].[EtatFinalErrorMessage]) = 'The validity date of this message has expired.'
+where trim([Subject]) in 
+('05_012_REC_DECLARATION DE CREANCE (ADMINISTRATEUR JUDICIAIRE)'
+,'05_014_REC_DECLARATION DE CREANCE (ADHERENT)'
+,'02_002_REC MISE EN DEMEURE'
+,'02_002_REC MISE EN DEMEURE')
 order by [CTE_envois].[date initialisation] desc
